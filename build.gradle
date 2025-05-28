@@ -6,6 +6,9 @@ buildscript {
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
+        // 添加阿里云 Maven 镜像
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
         
     }
     dependencies {
@@ -21,6 +24,9 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
+        // 添加阿里云 Maven 镜像
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
         
     }
 }
