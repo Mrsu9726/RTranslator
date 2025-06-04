@@ -127,8 +127,8 @@ public class CustomLocale implements Comparable<CustomLocale>, Serializable {
         return locale.getDisplayLanguage();
     }
 
-    public String getDisplayLanguage(Locale locale) {
-        return locale.getDisplayLanguage(locale);
+    public String getDisplayLanguage(Locale inLocale) {
+        return locale.getDisplayLanguage(inLocale);
     }
 
     public String getDisplayScript() {
@@ -143,8 +143,8 @@ public class CustomLocale implements Comparable<CustomLocale>, Serializable {
         return locale.getDisplayCountry();
     }
 
-    public String getDisplayCountry(Locale locale) {
-        return locale.getDisplayCountry(locale);
+    public String getDisplayCountry(Locale inLocale) {
+        return locale.getDisplayCountry(inLocale);
     }
 
     public String getDisplayVariant() {
@@ -170,8 +170,8 @@ public class CustomLocale implements Comparable<CustomLocale>, Serializable {
         return name.substring(0,1).toUpperCase(locale) + name.substring(1);  //we convert the first letter to uppercase
     }
 
-    public String getDisplayName(Locale locale) {
-        return locale.getDisplayName(locale);
+    public String getDisplayName(Locale inLocale) {
+        return locale.getDisplayName(inLocale);
         /*String displayLanguage;
         if (locale.getDisplayCountry().isEmpty()) {
             displayLanguage = locale.getDisplayLanguage();
