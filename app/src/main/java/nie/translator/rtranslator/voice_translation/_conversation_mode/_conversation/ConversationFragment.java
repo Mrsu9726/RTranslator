@@ -34,6 +34,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -71,6 +72,7 @@ public class ConversationFragment extends PairingToolbarFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("ConversationFragment created");
         communicatorCallback = new VoiceTranslationActivity.Callback() {
             @Override
             public void onSearchStarted() {
@@ -219,6 +221,7 @@ public class ConversationFragment extends PairingToolbarFragment {
     @Override
     public void onPause() {
         super.onPause();
+        LogUtils.d("ConversationFragment onPause");
         if (pagerPosition == 1 && global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().removeCallback(communicatorCallback);
         }

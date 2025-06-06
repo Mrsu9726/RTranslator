@@ -35,6 +35,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.blankj.utilcode.util.LogUtils;
+
 import java.util.ArrayList;
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
@@ -60,6 +63,7 @@ public abstract class VoiceTranslationFragment extends Fragment implements Micro
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("VoiceTranslationFragment", "onCreate");
     }
 
     @Override
@@ -102,6 +106,12 @@ public abstract class VoiceTranslationFragment extends Fragment implements Micro
         super.onStart();
         //we set the option to compress ui when the keyboard is shown
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtils.d("VoiceTranslationFragment", "onPause");
     }
 
     @Override

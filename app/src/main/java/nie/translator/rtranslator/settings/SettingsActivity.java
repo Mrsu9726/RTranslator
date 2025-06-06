@@ -23,6 +23,9 @@ import android.widget.Toolbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.blankj.utilcode.util.LogUtils;
+
 import nie.translator.rtranslator.GeneralActivity;
 import nie.translator.rtranslator.R;
 
@@ -34,6 +37,7 @@ public class SettingsActivity extends GeneralActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("SettingsActivity onCreate");
         setContentView(R.layout.activity_settings);
 
         Toolbar toolbar = findViewById(R.id.toolbarSettings);
@@ -114,5 +118,11 @@ public class SettingsActivity extends GeneralActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogUtils.d("SettingsActivity onPause");
     }
 }

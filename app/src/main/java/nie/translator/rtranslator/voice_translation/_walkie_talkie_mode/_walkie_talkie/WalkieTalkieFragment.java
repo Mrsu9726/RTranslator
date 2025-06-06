@@ -43,6 +43,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.util.ArrayList;
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
@@ -101,6 +103,7 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("WalkieTalkieFragment", "onCreate");
         walkieTalkieServiceCommunicator = new WalkieTalkieService.WalkieTalkieServiceCommunicator(0);
         walkieTalkieServiceCallback = new WalkieTalkieServiceCallback();
     }
@@ -596,6 +599,12 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                 onFailureShowingList(reasons, value);
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtils.d("WalkieTalkieFragment", "onPause");
     }
 
     @Override

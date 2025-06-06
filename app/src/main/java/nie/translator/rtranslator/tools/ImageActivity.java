@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.util.ArrayList;
 
 import nie.translator.rtranslator.R;
@@ -29,6 +31,7 @@ public class ImageActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("ImageActivity onCreate");
         setContentView(R.layout.image_conversation);
 
         View decorView = getWindow().getDecorView();
@@ -63,5 +66,11 @@ public class ImageActivity extends Activity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(layoutManager);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LogUtils.d("ImageActivity onStop");
     }
 }

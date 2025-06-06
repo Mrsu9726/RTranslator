@@ -23,6 +23,9 @@ import android.view.View;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.blankj.utilcode.util.LogUtils;
+
 import nie.translator.rtranslator.GeneralActivity;
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
@@ -37,6 +40,7 @@ public class AccessActivity extends GeneralActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("AccessActivity onCreate");
         setContentView(R.layout.activity_access);
 
         View decorView = getWindow().getDecorView();
@@ -68,6 +72,7 @@ public class AccessActivity extends GeneralActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        LogUtils.d("AccessActivity onStop");
         Global global = (Global) getApplication();
         if(global != null){
             global.setAccessActivity(null);

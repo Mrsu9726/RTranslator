@@ -43,6 +43,9 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.blankj.utilcode.util.LogUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import nie.translator.rtranslator.GeneralActivity;
@@ -98,6 +101,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("VoiceTranslationActivity", "onCreate");
         setContentView(R.layout.activity_main);
         global = (Global) getApplication();
         mainHandler = new Handler(Looper.getMainLooper());
@@ -150,6 +154,12 @@ public class VoiceTranslationActivity extends GeneralActivity {
         if(getResources() != null) {
             config = getResources().getConfiguration();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogUtils.d("VoiceTranslationActivity", "onPause");
     }
 
     @Override

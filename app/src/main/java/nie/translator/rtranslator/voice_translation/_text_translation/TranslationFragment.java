@@ -36,6 +36,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -129,6 +130,7 @@ public class TranslationFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("TranslationFragment", "onCreate");
     }
 
     @Override
@@ -879,6 +881,12 @@ public class TranslationFragment extends Fragment {
                 onFailureShowingList(reasons, value);
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtils.d("TranslationFragment", "onPause");
     }
 
     @Override

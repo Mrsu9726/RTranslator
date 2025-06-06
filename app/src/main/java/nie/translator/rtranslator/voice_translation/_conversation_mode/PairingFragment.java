@@ -37,6 +37,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,6 +94,7 @@ public class PairingFragment extends PairingToolbarFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d("PairingFragment onCreate");
         mainHandler = new Handler(Looper.getMainLooper());
         communicatorCallback = new VoiceTranslationActivity.Callback() {
             @Override
@@ -374,6 +377,7 @@ public class PairingFragment extends PairingToolbarFragment {
     @Override
     public void onPause() {
         super.onPause();
+        LogUtils.d("PairingFragment onPause");
         activity.removeCallback(communicatorCallback);
         stopSearch();
         //communicatorCallback.onSearchStopped();

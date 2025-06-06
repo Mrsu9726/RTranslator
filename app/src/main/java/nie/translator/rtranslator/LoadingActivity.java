@@ -23,18 +23,25 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
+
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import nie.translator.rtranslator.access.AccessActivity;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.ErrorCodes;
 import nie.translator.rtranslator.tools.ImageActivity;
+import nie.translator.rtranslator.tools.ThreadUtils;
 import nie.translator.rtranslator.voice_translation.VoiceTranslationActivity;
 import nie.translator.rtranslator.voice_translation.neural_networks.NeuralNetworkApi;
 import nie.translator.rtranslator.voice_translation.neural_networks.translation.Translator;
 
 import androidx.core.splashscreen.SplashScreen;
+
+import com.blankj.utilcode.util.LogUtils;
 
 
 public class LoadingActivity extends GeneralActivity {
@@ -45,27 +52,30 @@ public class LoadingActivity extends GeneralActivity {
     private boolean startingActivity = false;
     private boolean showingError = false;
 
+    private int delay_seconds = 30;
+
     public LoadingActivity() {
         // Required empty public constructor
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtils.d("LoadingActivity", "onCreate");
         String previousActivity = getIntent().getStringExtra("activity");
         SplashScreen splashScreen = null;
-        if(previousActivity == null || !previousActivity.equals("download")) {  //if this activity is called by the DownloadFragment we don't use the splash screen
+        if (previousActivity == null || !previousActivity.equals("download")) {  //if this activity is called by the DownloadFragment we don't use the splash screen
             // Handle the splash screen transition (it must remain before the super.onCreate() call).
             splashScreen = SplashScreen.installSplashScreen(this);
         }
         super.onCreate(savedInstanceState);
-        if(splashScreen == null){
+        if (splashScreen == null) {
             setTheme(R.style.Theme_Speech);
         }
         setContentView(R.layout.activity_loading);
         mainHandler = new Handler(Looper.getMainLooper());
 
         // Keep the splash screen visible for this Activity.
-        if(splashScreen != null) {
+        if (splashScreen != null) {
             splashScreen.setKeepOnScreenCondition(new SplashScreen.KeepOnScreenCondition() {
                 @Override
                 public boolean shouldKeepOnScreen() {
@@ -79,6 +89,15 @@ public class LoadingActivity extends GeneralActivity {
         super.onResume();
         isVisible = true;
         global = (Global) getApplication();
+        ThreadUtils.getInstance().executeWithTimeoutAsync(
+                () -> dodoNothing(),
+                delay_seconds, TimeUnit.SECONDS,
+                result -> goActivityByIsFirst(),
+                error -> Log.e("BB", "处理失败或超时：" + error.getMessage())
+        );
+    }
+
+    private void goActivityByIsFirst() {
         if (global.isFirstStart()) {
             Intent intent = new Intent(this, AccessActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -93,9 +112,14 @@ public class LoadingActivity extends GeneralActivity {
         }
     }
 
+    private Object dodoNothing() {
+        return null;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
+        LogUtils.d("LoadingActivity", "onPause");
         isVisible = false;
     }
 
@@ -110,7 +134,12 @@ public class LoadingActivity extends GeneralActivity {
                             @Override
                             public void onInitializationFinished() {
                                 if (isVisible) {
-                                    startVoiceTranslationActivity();
+                                    ThreadUtils.getInstance().executeWithTimeoutAsync(
+                                            () -> dodoNothing(),
+                                            delay_seconds, TimeUnit.SECONDS,
+                                            result -> startVoiceTranslationActivity(),
+                                            error -> Log.e("BB", "处理失败或超时：" + error.getMessage())
+                                    );
                                 }
                             }
 
@@ -138,14 +167,14 @@ public class LoadingActivity extends GeneralActivity {
     }
 
     private void startVoiceTranslationActivity() {
-        if(!START_IMAGE) {
+        if (!START_IMAGE) {
             startingActivity = true;
             Intent intent = new Intent(LoadingActivity.this, VoiceTranslationActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
-        }else{
+        } else {
             startImageActivity();
         }
     }
@@ -216,7 +245,7 @@ public class LoadingActivity extends GeneralActivity {
                     builder.setPositiveButton(R.string.fix, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if(global != null){
+                            if (global != null) {
                                 restartDownload();
                             }
                         }
@@ -252,7 +281,7 @@ public class LoadingActivity extends GeneralActivity {
     }
 
 
-    private void restartDownload(){
+    private void restartDownload() {
         //we reset all the download shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences("default", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor;
@@ -270,6 +299,15 @@ public class LoadingActivity extends GeneralActivity {
         editor.apply();
         //we restart the download (only the corrupted files will be re-downloaded)
         global.setFirstStart(true);
+        ThreadUtils.getInstance().executeWithTimeoutAsync(
+                () -> dodoNothing(),
+                delay_seconds, TimeUnit.SECONDS,
+                result -> goAccessActivity(),
+                error -> Log.e("BB", "处理失败或超时：" + error.getMessage())
+        );
+    }
+
+    private void goAccessActivity() {
         Intent intent = new Intent(LoadingActivity.this, AccessActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
