@@ -164,12 +164,13 @@ public class LoadingActivity extends GeneralActivity {
         mainHandler.post(new Runnable() {
             @Override
             public void run() {
-                showGoogleTTSErrorDialog(new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        initializeApp(true);
-                    }
-                });
+//                showGoogleTTSErrorDialog(new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        initializeApp(true);
+//                    }
+//                });
+                initializeApp(true);
             }
         });
     }
