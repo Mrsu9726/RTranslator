@@ -16,6 +16,7 @@
 
 package nie.translator.rtranslator;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +25,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -31,6 +35,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import nie.translator.rtranslator.access.AccessActivity;
+import nie.translator.rtranslator.onboarding.OnboardingActivity;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.ErrorCodes;
 import nie.translator.rtranslator.tools.ImageActivity;
@@ -54,10 +59,12 @@ public class LoadingActivity extends GeneralActivity {
 
     private int delay_seconds = 30;
 
+    private ImageView loadingImage;
     public LoadingActivity() {
         // Required empty public constructor
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LogUtils.d("LoadingActivity", "onCreate");
@@ -83,6 +90,9 @@ public class LoadingActivity extends GeneralActivity {
                 }
             });
         }
+        loadingImage = findViewById(R.id.loading_iv);
+        Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_loading);
+        loadingImage.startAnimation(rotateAnimation);
     }
 
     public void onResume() {
@@ -200,6 +210,8 @@ public class LoadingActivity extends GeneralActivity {
 //                    }
 //                });
                 initializeApp(true);
+//                Intent intent = new Intent(LoadingActivity.this, OnboardingActivity.class);
+//                startActivity(intent);
             }
         });
     }

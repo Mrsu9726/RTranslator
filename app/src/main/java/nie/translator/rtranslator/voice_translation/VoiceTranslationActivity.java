@@ -53,6 +53,7 @@ import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
 import nie.translator.rtranslator.bluetooth.BluetoothCommunicator;
 import nie.translator.rtranslator.settings.SettingsActivity;
+import nie.translator.rtranslator.standby.StandbyManager;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.CustomServiceConnection;
 import nie.translator.rtranslator.tools.Tools;
@@ -143,6 +144,13 @@ public class VoiceTranslationActivity extends GeneralActivity {
             //Restore the fragment's instance
             fragment = getSupportFragmentManager().getFragment(savedInstanceState, "myFragmentName");
         }*/
+
+        fragmentContainer.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                StandbyManager.INSTANCE.start(VoiceTranslationActivity.this.getApplication());
+            }
+        },1000);
     }
 
     @Override

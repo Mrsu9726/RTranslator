@@ -152,9 +152,9 @@
     <string name="preference_description_tts">System settings of tts, an eventual change of the preferred engine will be applied only after the restart of the app</string>
     <string name="preference_description_speech_timeout">Select the time after you stop talking to send the transcribed text</string>
     <string name="preference_description_prev_voice_duration">Select the length of the recording before you start speaking that will be included in the voice recognition</string>
-    <string name="conversation_mode" >Conversation</string>
-    <string name="conversation_mode_running" >Conversation mode is running...</string>
-    <string name="walkietalkie_mode" >WalkieTalkie</string>
-    <string name="walkietalkie_mode_running" >WalkieTalkie mode is running...</string>
+    <string name="conversation_mode">Conversation</string>
+    <string name="conversation_mode_running">Conversation mode is running...</string>
+    <string name="walkietalkie_mode">WalkieTalkie</string>
+    <string name="walkietalkie_mode_running">WalkieTalkie mode is running...</string>
 
 </resources>

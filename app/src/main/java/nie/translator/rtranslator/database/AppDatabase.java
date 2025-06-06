@@ -21,7 +21,11 @@ import nie.translator.rtranslator.database.dao.MyDao;
 import nie.translator.rtranslator.database.entities.RecentPeerEntity;
 
 
-@androidx.room.Database(version = 1, entities = {RecentPeerEntity.class})
+@androidx.room.Database(
+        version = 1,
+        entities = {RecentPeerEntity.class},
+        exportSchema = false  // 添加这一行禁用架构导出
+)
 abstract public class AppDatabase extends RoomDatabase {
     abstract public MyDao myDao();
 }
