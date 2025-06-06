@@ -51,7 +51,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.Speech"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="28">
         <activity
             android:name="nie.translator.rtranslator.LoadingActivity"
             android:exported="true"
