@@ -13,11 +13,11 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/standby_bg" />
 
-<!--    <nie.translator.rtranslator.tools.blur.RealtimeBlurView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:realtimeBlurRadius="2"-->
-<!--        app:realtimeDownsampleFactor="5"/>-->
+    <!--    <nie.translator.rtranslator.tools.blur.RealtimeBlurView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        app:realtimeBlurRadius="2"-->
+    <!--        app:realtimeDownsampleFactor="5"/>-->
 
     <ImageView
         android:id="@+id/lock_iv"
@@ -29,27 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="307dp"
-        android:text="Hello,"
-        android:textColor="#FFFFFFFF"
-        android:textSize="80sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="435dp"
-        android:text="请选择一种语言"
-        android:textColor="#FFFFFFFF"
-        android:textSize="60sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.hjq.shape.view.ShapeButton
         android:layout_width="640dp"
@@ -64,5 +43,110 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    <!--语言列表-->
+    <com.hjq.shape.layout.ShapeConstraintLayout
+        android:id="@+id/language_list_layout"
+        android:layout_width="800dp"
+        android:layout_height="1300dp"
+        android:layout_marginTop="306dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shape_radius="26dp"
+        app:shape_solidColor="@color/white">
+
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/language_title"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select a language"
+                android:textColor="#FF262626"
+                android:textSize="40sp" />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/language_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/language_title" />
+    </com.hjq.shape.layout.ShapeConstraintLayout>
+    <!--选中语言-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="307dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello,"
+            android:textColor="#FFFFFFFF"
+            android:textSize="80sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/select_language_tips_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="128dp"
+            android:text="请选择一种语言"
+            android:textColor="#FFFFFFFF"
+            android:textSize="60sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/select_language_layout"
+            android:layout_width="800dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="85dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/select_language_tips_tv"
+            app:shape_radius="120dp"
+            app:shape_solidColor="@color/white">
+
+            <ImageView
+                android:id="@+id/select_language_flag_iv"
+                android:layout_width="60dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="50dp"
+                android:src="@drawable/flag_cn" />
+
+            <TextView
+                android:id="@+id/select_language_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="中文"
+                android:textColor="#FF262626"
+                android:textSize="32sp" />
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="527dp"
+                android:src="@mipmap/select_language_icon" />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -209,9 +209,9 @@ public class LoadingActivity extends GeneralActivity {
 //                        initializeApp(true);
 //                    }
 //                });
-                initializeApp(true);
-//                Intent intent = new Intent(LoadingActivity.this, OnboardingActivity.class);
-//                startActivity(intent);
+//                initializeApp(true);
+                Intent intent = new Intent(LoadingActivity.this, OnboardingActivity.class);
+                startActivity(intent);
             }
         });
     }
