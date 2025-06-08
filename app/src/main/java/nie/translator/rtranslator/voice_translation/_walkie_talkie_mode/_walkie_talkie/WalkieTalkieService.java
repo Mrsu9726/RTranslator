@@ -389,9 +389,17 @@ public class WalkieTalkieService extends VoiceTranslationService {
         final CustomLocale finalFirstLanguage = this.firstLanguage;
         final CustomLocale finalSecondLanguage = this.secondLanguage;
 
-        //getGroup the languages
-        firstLanguage = (CustomLocale) intent.getSerializableExtra("firstLanguage");
-        secondLanguage = (CustomLocale) intent.getSerializableExtra("secondLanguage");
+        // Retrieve the languages if provided
+        if (intent != null) {
+            CustomLocale fl = (CustomLocale) intent.getSerializableExtra("firstLanguage");
+            CustomLocale sl = (CustomLocale) intent.getSerializableExtra("secondLanguage");
+            if(fl != null){
+                firstLanguage = fl;
+            }
+            if(sl != null){
+                secondLanguage = sl;
+            }
+        }
 
         if(finalFirstLanguage==null || finalSecondLanguage==null ) {  //se è il primo avvio
             //we attach the speech recognition callbacks

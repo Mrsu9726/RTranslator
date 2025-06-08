@@ -96,7 +96,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
 
     public void initializeSpeechRecognizer(NeuralNetworkApi.InitListener initListener){
         if(speechRecognizer == null) {
-            speechRecognizer = new Recognizer(this, true, initListener);
+            speechRecognizer = new Recognizer(this, false, initListener);
         }else{
             initListener.onInitializationFinished();
         }
