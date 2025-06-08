@@ -37,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import nie.translator.rtranslator.GeneralActivity;
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
-import nie.translator.rtranslator.tools.ThreadUtils;
 
 
 public class AccessActivity extends GeneralActivity {
@@ -70,7 +69,9 @@ public class AccessActivity extends GeneralActivity {
                 startFragment(DOWNLOAD_FRAGMENT, null);
             } else {
                 LogUtils.d("进入提示信息 02");
-                startFragment(NOTICE_FRAGMENT, null);
+//                startFragment(NOTICE_FRAGMENT, null);
+                sharedPreferences.edit().putString("name", "syntalk").apply();
+                startFragment(DOWNLOAD_FRAGMENT, null);
             }
         }
     }
