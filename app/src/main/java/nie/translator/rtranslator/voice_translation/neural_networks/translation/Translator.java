@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.nl.languageid.LanguageIdentification;
@@ -190,7 +191,7 @@ public class Translator extends NeuralNetworkApi {
     }
 
     public interface TranslateListener extends TranslatorListener {
-        void onTranslatedText(String text, long resultID, boolean isFinal, CustomLocale languageOfText);
+        void onTranslatedText(String srcText,String text, long resultID, boolean isFinal, CustomLocale languageOfText);
     }
 
     public void translateMessage(final ConversationMessage conversationMessageToTranslate, final CustomLocale languageOutput, int beamSize, final TranslateMessageListener responseListener) {  // what the thread does
@@ -216,7 +217,7 @@ public class Translator extends NeuralNetworkApi {
             if (!languageInput.equals(data.languageOutput)) {
                 performTextTranslation(text, languageInput, data.languageOutput, data.beamSize, false, new TranslateListener() {
                     @Override
-                    public void onTranslatedText(String text, long resultID, boolean isFinal, CustomLocale languageOfText) {
+                    public void onTranslatedText(String src,String text, long resultID, boolean isFinal, CustomLocale languageOfText) {
                         data.conversationMessageToTranslate.getPayload().setText(text);
                         data.conversationMessageToTranslate.getPayload().setLanguage(data.languageOutput);
                         mainHandler.post(() -> data.responseListener.onTranslatedMessage(data.conversationMessageToTranslate, resultID, isFinal));
@@ -423,9 +424,9 @@ public class Translator extends NeuralNetworkApi {
         callbacks.remove(callback);
     }
 
-    private void notifyResult(String text, long resultID, boolean isFinal, CustomLocale languageOfText) {
+    private void notifyResult(String srcText,String text, long resultID, boolean isFinal, CustomLocale languageOfText) {
         for (int i = 0; i < callbacks.size(); i++) {
-            callbacks.get(i).onTranslatedText(text, resultID, isFinal, languageOfText);
+            callbacks.get(i).onTranslatedText(srcText,text, resultID, isFinal, languageOfText);
         }
     }
 
@@ -434,10 +435,11 @@ public class Translator extends NeuralNetworkApi {
             callbacks.get(i).onFailure(reasons, value);
         }
     }
-
+    private String srcText = "";
     private void performTextTranslation(final String textToTranslate, final CustomLocale inputLanguage, final CustomLocale outputLanguage, int beamSize, boolean saveResults, @Nullable final TranslateListener responseListener) {
         long initTime = System.currentTimeMillis();
-        android.util.Log.i("result", "Translation input: " + textToTranslate);
+        LogUtils.i("result", "Translation input: " + textToTranslate);
+        srcText = textToTranslate;
         if(saveResults) {
             lastInputText = new GuiMessage(new Message(global, textToTranslate), false, true);
         }
@@ -509,7 +511,7 @@ public class Translator extends NeuralNetworkApi {
             } else if (beamSize == 1) {  //greedy search (with kv cache)
                 executeCacheDecoderGreedy(input, encoderResult, completeOutput, outputLanguage, new TranslateListener() {
                     @Override
-                    public void onTranslatedText(String text, long resultID, boolean isFinal, CustomLocale languageOfText) {
+                    public void onTranslatedText(String src,String text, long resultID, boolean isFinal, CustomLocale languageOfText) {
                         //we return the partial results
                         String outputText;
                         if(joinedStringOutput[0].equals("")){
@@ -522,9 +524,9 @@ public class Translator extends NeuralNetworkApi {
                         }
                         final long currentResultIDCopy = currentResultID;  //we do a copy because otherwise the currentResultID is incremented before notifying the message (due to the notification being executed in the mainThread)
                         if (responseListener != null) {
-                            mainHandler.post(() -> responseListener.onTranslatedText(outputText, currentResultIDCopy, false, outputLanguage));
+                            mainHandler.post(() -> responseListener.onTranslatedText(src,outputText, currentResultIDCopy, false, outputLanguage));
                         } else {
-                            mainHandler.post(() -> notifyResult(outputText, currentResultIDCopy, false, outputLanguage));
+                            mainHandler.post(() -> notifyResult(srcText,outputText, currentResultIDCopy, false, outputLanguage));
                         }
                     }
 
@@ -568,9 +570,9 @@ public class Translator extends NeuralNetworkApi {
         }
         final long currentResultIDCopy = currentResultID;  //we do a copy because otherwise the currentResultID is incremented before notifying the message (due to the notification being executed in the mainThread)
         if (responseListener != null) {
-            mainHandler.post(() -> responseListener.onTranslatedText(finalResult, currentResultIDCopy, true, outputLanguage));
+            mainHandler.post(() -> responseListener.onTranslatedText(textToTranslate,finalResult, currentResultIDCopy, true, outputLanguage));
         } else {
-            mainHandler.post(() -> notifyResult(finalResult, currentResultIDCopy, true, outputLanguage));
+            mainHandler.post(() -> notifyResult(textToTranslate,finalResult, currentResultIDCopy, true, outputLanguage));
         }
         currentResultID++;
     }
@@ -764,11 +766,11 @@ public class Translator extends NeuralNetworkApi {
                 outputIDs = completeOutput.stream().mapToInt(i -> i).toArray();
                 String partialResult = tokenizer.decode(outputIDs);
                 if(responseListener != null) {
-                    responseListener.onTranslatedText(partialResult, currentResultID, false, outputLanguage);
+                    responseListener.onTranslatedText(srcText,partialResult, currentResultID, false, outputLanguage);
                 }else{
-                    notifyResult(partialResult, currentResultID, false, outputLanguage);
+                    notifyResult(srcText,partialResult, currentResultID, false, outputLanguage);
                 }
-                android.util.Log.i("result", partialResult);
+                LogUtils.i("result", partialResult);
                 j++;
                 //early stop if the decoder is generating in loop
                 if(input.getInputIDs().length > 30){  //if the input is long

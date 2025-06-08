@@ -52,10 +52,12 @@ public class Message implements Parcelable, Cloneable {
     private String header;  // mandatory length: 1
     private byte[] data;
 
+    private byte[] srcData;
+
     /**
      * @param context a context
      * @param header  must contain 1 character to avoid errors
-     * @param text the text of the message (it will be sent by sendMessage)
+     * @param text    the text of the message (it will be sent by sendMessage)
      */
     public Message(Context context, String header, @NonNull String text) {
         this.context = context;
@@ -64,18 +66,24 @@ public class Message implements Parcelable, Cloneable {
     }
 
     /**
-     *
      * @param context a context
-     * @param text the text of the message (it will be sent by sendMessage)
+     * @param text    the text of the message (it will be sent by sendMessage)
      */
     public Message(Context context, @NonNull String text) {
         this.context = context;
         this.data = text.getBytes(StandardCharsets.UTF_8);
+        this.srcData = null;
+    }
+
+    public Message(Context context, @NonNull String text, @NonNull String srText,boolean withSrc) {
+        this.context = context;
+        this.data = text.getBytes(StandardCharsets.UTF_8);
+        this.srcData = srText.getBytes(StandardCharsets.UTF_8);
     }
 
     /**
      * @param context a context
-     * @param header must contain 1 character to avoid errors
+     * @param header  must contain 1 character to avoid errors
      */
     public Message(Context context, String header, @NonNull byte[] data) {
         this.context = context;
@@ -84,9 +92,8 @@ public class Message implements Parcelable, Cloneable {
     }
 
     /**
-     *
      * @param context a context
-     * @param data the data of the message (it will be sent by sendData)
+     * @param data    the data of the message (it will be sent by sendData)
      */
     public Message(Context context, @NonNull byte[] data) {
         this.context = context;
@@ -118,7 +125,7 @@ public class Message implements Parcelable, Cloneable {
     /**
      * @param context a context
      * @param header  must contain 1 character to avoid errors
-     * @param text the text of the message (it will be sent by sendMessage)
+     * @param text    the text of the message (it will be sent by sendMessage)
      */
     public Message(Context context, @Nullable Peer sender, String header, @NonNull String text) {
         this.context = context;
@@ -146,8 +153,8 @@ public class Message implements Parcelable, Cloneable {
 
     /**
      * @param context a context
-     * @param sender the sender of the message
-     * @param data the data of the message (it will be sent by sendData)
+     * @param sender  the sender of the message
+     * @param data    the data of the message (it will be sent by sendData)
      */
     public Message(Context context, @Nullable Peer sender, @NonNull byte[] data) {
         this.context = context;
@@ -169,6 +176,7 @@ public class Message implements Parcelable, Cloneable {
 
     /**
      * Returns the header
+     *
      * @return header
      */
     public String getHeader() {
@@ -177,6 +185,7 @@ public class Message implements Parcelable, Cloneable {
 
     /**
      * Returns the sender
+     *
      * @return sender
      */
     public Peer getSender() {
@@ -198,6 +207,7 @@ public class Message implements Parcelable, Cloneable {
 
     /**
      * Returns the receiver
+     *
      * @return receiver
      */
     @Nullable
@@ -222,6 +232,12 @@ public class Message implements Parcelable, Cloneable {
      */
     public String getText() {
         return new String(this.data, StandardCharsets.UTF_8);
+    }
+
+    public String getSrcText() {
+        if (srcData == null)
+            return "";
+        return new String(this.srcData, StandardCharsets.UTF_8);
     }
 
     /**

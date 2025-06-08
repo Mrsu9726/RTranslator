@@ -22,6 +22,7 @@ ext {
     grpcVersion = '1.11.0'
 }
 
+
 android {
     namespace 'nie.translator.rtranslator'
     compileSdkVersion 35  //33
@@ -79,6 +80,13 @@ android {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
             version '3.22.1'
+        }
+    }
+
+    // 添加 flatDir 仓库
+    repositories {
+        flatDir {
+            dirs 'libs'
         }
     }
 
@@ -140,5 +148,7 @@ dependencies {
     implementation 'me.jahnen.libaums:core:0.10.0'
 
     //弹窗库
-    api 'com.github.li-xiaojun:XPopup:2.10.0'
+    implementation 'com.github.li-xiaojun:XPopup:2.10.0'
+
+    implementation files('libs/serialport-1.0.7.aar')
 }

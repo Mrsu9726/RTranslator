@@ -32,7 +32,9 @@ import java.util.ArrayList;
 
 import nie.translator.rtranslator.R;
 
-/** Is used to connect to the RecycleView, which functions as a ListView, a list of strings, which will be inserted in the ViewHolder layout and this will be inserted in the list**/
+/**
+ * Is used to connect to the RecycleView, which functions as a ListView, a list of strings, which will be inserted in the ViewHolder layout and this will be inserted in the list
+ **/
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int MINE = 0;
     private static final int NON_MINE = 1;
@@ -68,12 +70,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof MessageHolder) {
             GuiMessage message = mResults.get(position);
             if (holder instanceof ReceivedHolder && message.getMessage().getSender() != null) {
-                ((ReceivedHolder) holder).text.setVisibility(View.GONE);
+                ((ReceivedHolder) holder).contentLayout.setVisibility(View.GONE);
                 ((ReceivedHolder) holder).containerSender.setVisibility(View.VISIBLE);
                 ((ReceivedHolder) holder).sender.setText(message.getMessage().getSender().getName());
                 Log.d("recyclerview", "RecyclerView bind sender");
             }
             ((MessageHolder) holder).setText(message.getMessage().getText());
+            ((MessageHolder) holder).setSrcText(message.getMessage().getSrcText());
             Log.d("recyclerview", "RecyclerView bind text");
             //holder.itemView.requestLayout();
         }
@@ -123,9 +126,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyItemChanged(index);
     }
 
-    public int getMessageIndex(long messageID){
-        for(int i = 0; i < mResults.size(); i++){
-            if(mResults.get(i).getMessageID() == messageID){
+    public int getMessageIndex(long messageID) {
+        for (int i = 0; i < mResults.size(); i++) {
+            if (mResults.get(i).getMessageID() == messageID) {
                 return i;
             }
         }
@@ -133,9 +136,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Nullable
-    public GuiMessage getMessage(long messageID){
-        for(int i = 0; i < mResults.size(); i++){
-            if(mResults.get(i).getMessageID() == messageID){
+    public GuiMessage getMessage(long messageID) {
+        for (int i = 0; i < mResults.size(); i++) {
+            if (mResults.get(i).getMessageID() == messageID) {
                 return mResults.get(i);
             }
         }
@@ -154,18 +157,21 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mResults;
     }
 
-    /** The layout for each item in the RecicleView list*/
+    /**
+     * The layout for each item in the RecicleView list
+     */
     private static class ReceivedHolder extends RecyclerView.ViewHolder implements MessageHolder {
-        TextView text;
-        LinearLayout containerSender;
+        TextView text, srcText;
+        LinearLayout containerSender,contentLayout;
         TextView textSender;
         TextView sender;
 
         ReceivedHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.component_message_received, parent, false));
             text = itemView.findViewById(R.id.text_content);
-
+            srcText = itemView.findViewById(R.id.text_content_src);
             containerSender = itemView.findViewById(R.id.sender_container);
+            contentLayout = itemView.findViewById(R.id.text_content_layout);
             textSender = itemView.findViewById(R.id.text_content2);
             sender = itemView.findViewById(R.id.text_sender);
         }
@@ -175,16 +181,24 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.textSender.setText(text);
             this.text.setText(text);
         }
+
+        @Override
+        public void setSrcText(String text) {
+            this.srcText.setText(text);
+        }
     }
 
-    /** The layout for each item in the RecicleView list*/
+    /**
+     * The layout for each item in the RecicleView list
+     */
     private static class SendHolder extends RecyclerView.ViewHolder implements MessageHolder {
-        TextView text;
+        TextView text, srcText;
         CardView card;
 
         SendHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.component_message_send, parent, false));
             text = itemView.findViewById(R.id.text);
+            srcText = itemView.findViewById(R.id.text_src);
             card = itemView.findViewById(R.id.card);
         }
 
@@ -192,10 +206,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void setText(String text) {
             this.text.setText(text);
         }
+
+        @Override
+        public void setSrcText(String text) {
+            this.srcText.setText(text);
+        }
     }
 
     interface MessageHolder {
         void setText(String text);
+
+        void setSrcText(String text);
     }
 
     public interface Callback {
