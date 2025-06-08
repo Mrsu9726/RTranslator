@@ -75,6 +75,9 @@ public class Recorder {
     private int headIndex;
     private int tailIndex;
     private int startVoiceIndex;
+    private int lastChunkIndex;
+    private long lastChunkTime;
+    private static final int STREAMING_CHUNK_MILLIS = 1000;
     /**
      * The timestamp of the last time that voice is heard.
      */
@@ -95,6 +98,8 @@ public class Recorder {
         this.global = global;
         headIndex = 0;
         tailIndex = 0;
+        lastChunkIndex = 0;
+        lastChunkTime = 0;
         global.getMicSensitivity();
         global.getSpeechTimeout();
         global.getPrevVoiceDuration();
@@ -197,21 +202,11 @@ public class Recorder {
     }
 
     public void end() {
-        //convert the relevant portion of the circular mBuffer to a normal array
-        int voiceLength = getMBufferRangeSize(startVoiceIndex, tailIndex);
-        float[] data = new float[voiceLength];
-        int circularIndex = startVoiceIndex;
-        for(int i=0; i<voiceLength; i++){
-            data[i] = mBuffer[circularIndex];
-            if (circularIndex < mBuffer.length-1){
-                circularIndex++;
-            }else{
-                circularIndex = 0;
-            }
-        }
-        mCallback.onVoice(data, voiceLength);
-        //reset relevant variables
+        // send the remaining buffered audio
+        sendChunk(lastChunkIndex, tailIndex);
+        // reset relevant variables
         startVoiceIndex = 0;  //is not necessary
+        lastChunkIndex = 0;
         mLastVoiceHeardMillis = Long.MAX_VALUE;
         mCallback.onVoiceEnd();
     }
@@ -356,8 +351,15 @@ public class Recorder {
                             } else {
                                 startVoiceIndex = headIndex;
                             }
+                            lastChunkIndex = startVoiceIndex;
+                            lastChunkTime = now;
                         }
                         mLastVoiceHeardMillis = now;
+                        if(now - lastChunkTime > STREAMING_CHUNK_MILLIS){
+                            sendChunk(lastChunkIndex, tailIndex);
+                            lastChunkIndex = tailIndex;
+                            lastChunkTime = now;
+                        }
                         if (now - (mVoiceStartedMillis - global.getPrevVoiceDuration()) > MAX_SPEECH_LENGTH_MILLIS) {
                             if(!Thread.currentThread().isInterrupted()) {
                                 end();
@@ -435,6 +437,24 @@ public class Recorder {
         }else{
             return true;  //in this way if we are in manual mode the recording will run until we call end()
         }
+    }
+
+    private void sendChunk(int begin, int end){
+        int voiceLength = getMBufferRangeSize(begin, end);
+        if(voiceLength <= 0){
+            return;
+        }
+        float[] data = new float[voiceLength];
+        int circularIndex = begin;
+        for(int i=0; i<voiceLength; i++){
+            data[i] = mBuffer[circularIndex];
+            if (circularIndex < mBuffer.length-1){
+                circularIndex++;
+            }else{
+                circularIndex = 0;
+            }
+        }
+        mCallback.onVoice(data, voiceLength);
     }
 
     private void notifyVolumeLevel(float[] buffer, int begin, int end) {

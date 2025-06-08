@@ -78,6 +78,19 @@ public class WalkieTalkieService extends VoiceTranslationService {
         super.onCreate();
         translator = ((Global) getApplication()).getTranslator();
         speechRecognizer = ((Global) getApplication()).getSpeechRecognizer();
+        if(speechRecognizer == null){
+            ((Global) getApplication()).initializeSpeechRecognizer(new NeuralNetworkApi.InitListener() {
+                @Override
+                public void onInitializationFinished() {
+                    speechRecognizer = ((Global) getApplication()).getSpeechRecognizer();
+                }
+
+                @Override
+                public void onError(int[] reasons, long value) {
+                    // initialization failed, nothing we can do
+                }
+            });
+        }
         clientHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull android.os.Message message) {
@@ -389,23 +402,48 @@ public class WalkieTalkieService extends VoiceTranslationService {
         final CustomLocale finalFirstLanguage = this.firstLanguage;
         final CustomLocale finalSecondLanguage = this.secondLanguage;
 
-        //getGroup the languages
-        firstLanguage = (CustomLocale) intent.getSerializableExtra("firstLanguage");
-        secondLanguage = (CustomLocale) intent.getSerializableExtra("secondLanguage");
+        // Retrieve the languages if provided
+        if (intent != null) {
+            CustomLocale fl = (CustomLocale) intent.getSerializableExtra("firstLanguage");
+            CustomLocale sl = (CustomLocale) intent.getSerializableExtra("secondLanguage");
+            if(fl != null){
+                firstLanguage = fl;
+            }
+            if(sl != null){
+                secondLanguage = sl;
+            }
+        }
 
         if(finalFirstLanguage==null || finalSecondLanguage==null ) {  //se è il primo avvio
-            //we attach the speech recognition callbacks
-            speechRecognizer.addMultiCallback(speechRecognizerCallback);
-            speechRecognizer.addCallback(speechRecognizerSingleCallback);
+            if(speechRecognizer == null){
+                ((Global) getApplication()).initializeSpeechRecognizer(new NeuralNetworkApi.InitListener() {
+                    @Override
+                    public void onInitializationFinished() {
+                        speechRecognizer = ((Global) getApplication()).getSpeechRecognizer();
+                        speechRecognizer.addMultiCallback(speechRecognizerCallback);
+                        speechRecognizer.addCallback(speechRecognizerSingleCallback);
+                    }
+
+                    @Override
+                    public void onError(int[] reasons, long value) {
+                        // if initialization fails we cannot proceed
+                    }
+                });
+            }else{
+                speechRecognizer.addMultiCallback(speechRecognizerCallback);
+                speechRecognizer.addCallback(speechRecognizerSingleCallback);
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        //disconnect speechRecognizerCallback
-        speechRecognizer.removeMultiCallback(speechRecognizerCallback);
-        speechRecognizer.removeCallback(speechRecognizerSingleCallback);
+        //disconnect speechRecognizerCallback if available
+        if(speechRecognizer != null) {
+            speechRecognizer.removeMultiCallback(speechRecognizerCallback);
+            speechRecognizer.removeCallback(speechRecognizerSingleCallback);
+        }
         super.onDestroy();
     }
 

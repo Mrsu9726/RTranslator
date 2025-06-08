@@ -59,6 +59,7 @@ public class Recognizer extends NeuralNetworkApi {
     private boolean recognizing = false;
     private ArrayDeque<DataContainer> dataToRecognize = new ArrayDeque<>();
     private final Object lock = new Object();
+    private boolean returnResultOnlyAtTheEnd;
 
     private static final String[] LANGUAGES = {
             "en",
@@ -179,6 +180,7 @@ public class Recognizer extends NeuralNetworkApi {
 
     public Recognizer(Global global, final boolean returnResultOnlyAtTheEnd, final NeuralNetworkApi.InitListener initListener) {
         this.global = global;
+        this.returnResultOnlyAtTheEnd = returnResultOnlyAtTheEnd;
         //onnxEnv = OrtEnvironment.getEnvironment(OrtLoggingLevel.ORT_LOGGING_LEVEL_VERBOSE);
         onnxEnv = OrtEnvironment.getEnvironment();
 
@@ -455,6 +457,29 @@ public class Recognizer extends NeuralNetworkApi {
                             }
                             if(!finished2) {
                                 outputProbability2 = outputProbability2 + Math.log(Utils.softmax(outputValues2[max2], outputValues2));
+                            }
+                        }
+
+                        if(!returnResultOnlyAtTheEnd && completeOutput.size() > 4){
+                            int[] partialSeq1 = completeOutput.stream().mapToInt(i -> i).toArray();
+                            Map partialInputs = new LinkedHashMap();
+                            partialInputs.put("sequences", TensorUtils.createInt32Tensor(onnxEnv, partialSeq1, new long[]{1,1,partialSeq1.length}));
+                            OrtSession.Result partialOut = detokenizerSession.run(partialInputs);
+                            String partText1 = ((String[][]) partialOut.get(0).getValue())[0][0];
+                            partialOut.close();
+                            if(batchSize == 1){
+                                double partScore1 = outputProbability1 / partialSeq1.length;
+                                notifyResult(correctText(partText1), data.languageCode, partScore1, false);
+                            }else{
+                                int[] partialSeq2 = completeOutput2.stream().mapToInt(i -> i).toArray();
+                                Map partialInputs2 = new LinkedHashMap();
+                                partialInputs2.put("sequences", TensorUtils.createInt32Tensor(onnxEnv, partialSeq2, new long[]{1,1,partialSeq2.length}));
+                                OrtSession.Result partialOut2 = detokenizerSession.run(partialInputs2);
+                                String partText2 = ((String[][]) partialOut2.get(0).getValue())[0][0];
+                                partialOut2.close();
+                                double partScore1 = outputProbability1 / partialSeq1.length;
+                                double partScore2 = outputProbability2 / partialSeq2.length;
+                                notifyMultiResult(correctText(partText1), data.languageCode, partScore1, correctText(partText2), data.languageCode2, partScore2);
                             }
                         }
 
