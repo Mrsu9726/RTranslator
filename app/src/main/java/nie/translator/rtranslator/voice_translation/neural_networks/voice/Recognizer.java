@@ -182,12 +182,12 @@ public class Recognizer extends NeuralNetworkApi {
         //onnxEnv = OrtEnvironment.getEnvironment(OrtLoggingLevel.ORT_LOGGING_LEVEL_VERBOSE);
         onnxEnv = OrtEnvironment.getEnvironment();
 
-        String modelInitPath = global.getFilesDir().getPath() + "/Whisper_initializer.onnx";
-        String encoderPath = global.getFilesDir().getPath() + "/Whisper_encoder.onnx";
-        String decoderPath = global.getFilesDir().getPath() + "/Whisper_decoder.onnx";
-        String cacheInitPath = global.getFilesDir().getPath() + "/Whisper_cache_initializer.onnx";
-        String cacheInitBatchPath = global.getFilesDir().getPath() + "/Whisper_cache_initializer_batch.onnx";
-        String detokenizerPath = global.getFilesDir().getPath() + "/Whisper_detokenizer.onnx";
+        String modelInitPath = global.getApplicationContext().getFilesDir().getPath() + "/Whisper_initializer.onnx";
+        String encoderPath = global.getApplicationContext().getFilesDir().getPath() + "/Whisper_encoder.onnx";
+        String decoderPath = global.getApplicationContext().getFilesDir().getPath() + "/Whisper_decoder.onnx";
+        String cacheInitPath = global.getApplicationContext().getFilesDir().getPath() + "/Whisper_cache_initializer.onnx";
+        String cacheInitBatchPath = global.getApplicationContext().getFilesDir().getPath() + "/Whisper_cache_initializer_batch.onnx";
+        String detokenizerPath = global.getApplicationContext().getFilesDir().getPath() + "/Whisper_detokenizer.onnx";
 
         new Thread(new Runnable() {
             @Override

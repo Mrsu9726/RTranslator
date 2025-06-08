@@ -46,7 +46,7 @@ object UsbModelCopyService {
         callback = cb
         this.context = WeakReference(context)
         global = context.applicationContext as Global
-        TARGET_DIR = context.getFilesDir().absolutePath
+        TARGET_DIR = this.context?.get()?.getFilesDir()?.absolutePath.toString()
         val filter = IntentFilter(Intent.ACTION_MEDIA_MOUNTED)
         filter.addDataScheme("file")
         context.registerReceiver(usbReceiver, filter)
@@ -56,7 +56,7 @@ object UsbModelCopyService {
     fun registerApkReceiver(context: Context, apkCal: ApkCopyCallback) {
         apkCallback = apkCal
         this.context = WeakReference(context)
-        TARGET_DIR = context.getFilesDir().absolutePath
+        TARGET_DIR = this.context?.get()?.getFilesDir()?.absolutePath.toString()
         val filter = IntentFilter(Intent.ACTION_MEDIA_MOUNTED)
         filter.addDataScheme("file")
         context.registerReceiver(usbReceiver, filter)
@@ -78,8 +78,9 @@ object UsbModelCopyService {
         }
     }
 
-    fun cancel() {
+    fun cancel(context: Context) {
         cancelFlag.set(true)
+        unregisterUsbReceiver(context)
     }
 
     private fun scanAndCopyFromUsb() {
@@ -142,15 +143,13 @@ object UsbModelCopyService {
             var current = 0
             var lastReportTime = System.nanoTime()
             var bytesCopiedSinceLast = 0L
-            val targetDir = File(Environment.getExternalStorageDirectory(), TARGET_DIR)
 
             val futures = allFiles.map { usbFile ->
                 executorService.submit {
                     val relativePath = getRelativePath(usbModelsDir, usbFile)
-                    val destFile = File(targetDir, relativePath)
+                    val destFile = File(TARGET_DIR, relativePath)
                     destFile.parentFile?.mkdirs()
-
-                    val bytesCopied = copyUsbFile(usbFile, destFile)
+                    val bytesCopied = copyUsbFile(usbFile, relativePath)
                     synchronized(this) {
                         current++
                         bytesCopiedSinceLast += bytesCopied
@@ -189,15 +188,14 @@ object UsbModelCopyService {
             var current = 0
             var lastReportTime = System.nanoTime()
             var bytesCopiedSinceLast = 0L
-            val targetDir = File(Environment.getExternalStorageDirectory(), TARGET_APK_DIR)
 
             val futures = allFiles.map { usbFile ->
                 executorService.submit {
                     val relativePath = getRelativePath(apkDir, usbFile)
-                    val destFile = File(targetDir, relativePath)
+                    val destFile = File(TARGET_APK_DIR, relativePath)
                     destFile.parentFile?.mkdirs()
 
-                    val bytesCopied = copyUsbFile(usbFile, destFile)
+                    val bytesCopied = copyUsbFile(usbFile, relativePath)
                     synchronized(this) {
                         current++
                         bytesCopiedSinceLast += bytesCopied
@@ -259,25 +257,29 @@ object UsbModelCopyService {
                 copyUsbFilesRecursively(child, File(destination, child.name), onFileCopied)
             }
         } else {
-            val bytesCopied = copyUsbFile(source, destination)
+            val bytesCopied = copyUsbFile(source, destination.path)
             onFileCopied(source.name, bytesCopied)
         }
     }
 
     // 修改copyUsbFile方法
-    private fun copyUsbFile(usbFile: UsbFile, dest: File): Long {
+    private fun copyUsbFile(usbFile: UsbFile, dest: String): Long {
         var totalBytes = 0L
-        val bufferSize = 64 * 1024
-        UsbFileInputStream(usbFile).use { input ->
-            FileOutputStream(dest).channel.use { outputChannel ->
-                val buffer = ByteBuffer.allocateDirect(bufferSize)
-                while (input.read(buffer.array()) > 0) {
-                    if (cancelFlag.get()) return totalBytes
-                    buffer.flip()
-                    totalBytes += outputChannel.write(buffer)
-                    buffer.clear()
-                }
+        try {
+            val inputStream = UsbFileInputStream(usbFile)
+            val outFile = File(context?.get()?.filesDir, dest)
+
+            FileOutputStream(outFile).use { output ->
+                inputStream.copyTo(output)
             }
+            inputStream.close()
+
+            // 日志确认文件大小
+            totalBytes = outFile.length()
+            Log.d("FileCopy", "拷贝成功，文件大小: $totalBytes bytes")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
         return totalBytes
     }

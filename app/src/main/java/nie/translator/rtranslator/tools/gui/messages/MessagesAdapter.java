@@ -28,9 +28,12 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.util.ArrayList;
 
 import nie.translator.rtranslator.R;
+import nie.translator.rtranslator.standby.StandbyManager;
 
 /**
  * Is used to connect to the RecycleView, which functions as a ListView, a list of strings, which will be inserted in the ViewHolder layout and this will be inserted in the list
@@ -44,6 +47,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public MessagesAdapter(ArrayList<GuiMessage> messages, @NonNull Callback callback) {
         this.callback = callback;
+        LogUtils.d("MessagesAdapter", "MessagesAdapter");
         if (messages != null) {
             if (messages.size() > 0) {
                 callback.onFirstItemAdded();
@@ -67,6 +71,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        LogUtils.d("MessagesAdapter", "onBindViewHolder");
         if (holder instanceof MessageHolder) {
             GuiMessage message = mResults.get(position);
             if (holder instanceof ReceivedHolder && message.getMessage().getSender() != null) {
@@ -113,6 +118,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void addMessage(GuiMessage message) {
+        LogUtils.d("MessagesAdapter", "addMessage");
         if (getItemCount() == 0) {
             callback.onFirstItemAdded();
         }
@@ -121,6 +127,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void setMessage(int index, GuiMessage message) {
+        LogUtils.d("MessagesAdapter", "setMessage");
         mResults.set(index, message);
         //notifyItemRangeChanged(0, getItemCount());
         notifyItemChanged(index);

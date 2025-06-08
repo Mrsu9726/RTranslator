@@ -80,7 +80,7 @@
     </style>
 
     <style name="base_tv_big_style" parent="base_tv_small_style">
-        <item name="android:textSize">32sp</item>
+        <item name="android:textSize">52sp</item>
     </style>
 
     <style name="base_tv_small_style">

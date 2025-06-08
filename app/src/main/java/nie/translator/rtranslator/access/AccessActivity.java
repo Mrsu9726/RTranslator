@@ -93,7 +93,6 @@ public class AccessActivity extends GeneralActivity {
         if (global != null) {
             global.setAccessActivity(null);
         }
-        UsbModelCopyService.INSTANCE.unregisterUsbReceiver(this);
     }
 
     public void startFragment(int action, Bundle bundle) {

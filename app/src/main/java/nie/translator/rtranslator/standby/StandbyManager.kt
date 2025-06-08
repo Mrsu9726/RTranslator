@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.LogUtils
 
 // StandbyManager.kt
 object StandbyManager {
-    private const val STANDBY_DELAY_MS = 60_000L // 1 minute
+    private const val STANDBY_DELAY_MS = 120_000L // 1 minute
     private var handler: Handler? = null
     private var standbyRunnable: Runnable? = null
     private var isStandbyVisible = false
@@ -46,8 +46,16 @@ object StandbyManager {
         if (isStandbyVisible) {
             LogUtils.d("StandbyManager", "hideStandby")
             isStandbyVisible = false
-            StandbyWindow.hide(context)
+            StandbyWindow.hide()
             resetTimer(context) // <- 添加此行实现隐藏后自动开始倒计时
+        }
+    }
+
+    fun hideOrReset(context: Context) {
+        if (isStandbyVisible) {
+            hideStandby(context)
+        } else {
+            resetTimer(context)
         }
     }
 }

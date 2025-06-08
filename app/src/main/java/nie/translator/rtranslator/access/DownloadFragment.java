@@ -130,6 +130,9 @@ public class DownloadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    private void registerUsbReceiver() {
         UsbModelCopyService.INSTANCE.registerUsbReceiver(requireContext(), new ModelCopyCallback() {
             @Override
             public void onStart(int totalFiles) {
@@ -161,7 +164,7 @@ public class DownloadFragment extends Fragment {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putLong("currentDownloadId", -2);
                         editor.apply();
-                        if (progressPopup != null){
+                        if (progressPopup != null) {
                             progressPopup.setTitle("Copy Success");
                         }
                         startRTranslator();
@@ -377,8 +380,8 @@ public class DownloadFragment extends Fragment {
             //we cancel the storage warning (in this way when the user reopens the app the warning is shown only if the storage is still low)
             storageWarningText.setVisibility(View.GONE);
         }
-        UsbModelCopyService.INSTANCE.cancel();
-        if (progressPopup != null){
+        UsbModelCopyService.INSTANCE.cancel(requireContext());
+        if (progressPopup != null) {
             progressPopup.dismiss();
         }
     }
@@ -529,8 +532,8 @@ public class DownloadFragment extends Fragment {
             }
             if (nameIndex != -1) {
                 //we restart the transfer
-                File from = new File(global.getExternalFilesDir(null) + "/" + DownloadFragment.DOWNLOAD_NAMES[nameIndex]);
-                File to = new File(global.getFilesDir() + "/" + DownloadFragment.DOWNLOAD_NAMES[nameIndex]);
+                File from = new File(global.getApplicationContext().getExternalFilesDir(null) + "/" + DownloadFragment.DOWNLOAD_NAMES[nameIndex]);
+                File to = new File(global.getApplicationContext().getFilesDir() + "/" + DownloadFragment.DOWNLOAD_NAMES[nameIndex]);
                 int finalNameIndex = nameIndex;
                 FileTools.moveFile(from, to, new FileTools.MoveFileCallback() {
                     @Override
@@ -600,9 +603,7 @@ public class DownloadFragment extends Fragment {
     private void startUsbCopy() {
         //检查U盘是否已经插入
         usbCopyLayout.setVisibility(View.VISIBLE);
-//        if (UsbModelCopyService.INSTANCE.isUsbConnected()) {
-//            ToastUtils.showShort("请先插入优盘");
-//        }
+        registerUsbReceiver();
     }
 
     private void startRTranslator() {

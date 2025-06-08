@@ -33,13 +33,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
         <ImageView
             android:layout_width="720dp"
             android:layout_height="213dp"
             android:layout_marginTop="889dp"
             android:src="@mipmap/logo_syntalk"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

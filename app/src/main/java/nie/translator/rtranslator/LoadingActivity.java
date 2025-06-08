@@ -47,6 +47,7 @@ import nie.translator.rtranslator.voice_translation.neural_networks.translation.
 import androidx.core.splashscreen.SplashScreen;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 
 
 public class LoadingActivity extends GeneralActivity {
@@ -266,27 +267,28 @@ public class LoadingActivity extends GeneralActivity {
             @Override
             public void run() {
                 if (isVisible) {
-                    // creation of the dialog.
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoadingActivity.this);
-                    //builder.setCancelable(true);
-                    builder.setMessage(R.string.error_models_loading);
-                    builder.setPositiveButton(R.string.fix, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (global != null) {
-                                restartDownload();
-                            }
-                        }
-                    });
-                    builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
+                    ToastUtils.showShort(R.string.error_models_loading);
+//                    // creation of the dialog.
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(LoadingActivity.this);
+//                    //builder.setCancelable(true);
+//                    builder.setMessage(R.string.error_models_loading);
+//                    builder.setPositiveButton(R.string.fix, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            if (global != null) {
+//                                restartDownload();
+//                            }
+//                        }
+//                    });
+//                    builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+//                        }
+//                    });
+//                    AlertDialog dialog = builder.create();
+//                    dialog.setCanceledOnTouchOutside(false);
+//                    dialog.show();
                 }
             }
         });

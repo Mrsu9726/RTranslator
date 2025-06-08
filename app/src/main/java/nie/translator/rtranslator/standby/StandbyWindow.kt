@@ -36,7 +36,7 @@ object StandbyWindow {
 
         // 点击隐藏逻辑
         standbyView?.setOnClickListener {
-            hide(context)
+            hide()
         }
 
         val params = WindowManager.LayoutParams(
@@ -59,7 +59,7 @@ object StandbyWindow {
         startClockUpdater(context)
     }
 
-    fun hide(context: Context) {
+    fun hide() {
         standbyView?.let { view ->
             view.animate()
                 ?.translationY(-2000f)

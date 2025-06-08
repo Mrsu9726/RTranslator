@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 import nie.translator.rtranslator.Global;
+import nie.translator.rtranslator.standby.StandbyManager;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.ErrorCodes;
 import nie.translator.rtranslator.tools.Tools;
