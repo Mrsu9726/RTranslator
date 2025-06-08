@@ -142,48 +142,28 @@ object UsbModelCopyService {
             var current = 0
             var lastReportTime = System.nanoTime()
             var bytesCopiedSinceLast = 0L
-            val targetDir = File(context?.get()?.filesDir, TARGET_DIR)
+            val targetDir = File(Environment.getExternalStorageDirectory(), TARGET_DIR)
 
             val futures = allFiles.map { usbFile ->
                 executorService.submit {
                     val relativePath = getRelativePath(usbModelsDir, usbFile)
-                    val srcPath = usbPath + usbFile.absolutePath
                     val destFile = File(targetDir, relativePath)
-                    if (!destFile.parentFile.exists()) {
-                        destFile.parentFile?.mkdirs()
+                    destFile.parentFile?.mkdirs()
+
+                    val bytesCopied = copyUsbFile(usbFile, destFile)
+                    synchronized(this) {
+                        current++
+                        bytesCopiedSinceLast += bytesCopied
+                        val now = System.nanoTime()
+                        val durationSec = (now - lastReportTime) / 1e9
+                        var speed = 0.0
+                        if (durationSec >= 0.1) {
+                            speed = bytesCopiedSinceLast / 1024.0 / 1024.0 / durationSec
+                            bytesCopiedSinceLast = 0
+                            lastReportTime = now
+                        }
+                        callback?.onProgress(current, total, usbFile.name, speed)
                     }
-                    RootFileUtils.copyFileWithRoot(
-                        srcPath,
-                        destFile.absolutePath,
-                        object : FileCopyCallback {
-                            override fun onSuccess() {
-                                callback?.onSuccess()
-                            }
-
-                            override fun onFailure(errorMessage: String) {
-                                callback?.onFailure(errorMessage)
-                            }
-
-                            override fun onProgress(progress: Int) {
-                                callback?.onProgress(progress, 100, "", 0.0)
-                            }
-
-                        })
-//                    val bytesCopied = copyUsbFile(usbFile, destFile)
-//                    synchronized(this) {
-//                        current++
-//                        bytesCopiedSinceLast += bytesCopied
-//                        val now = System.nanoTime()
-//                        val durationSec = (now - lastReportTime) / 1e9
-//                        var speed = 0.0
-//                        if (durationSec >= 0.5) {
-//                            speed = bytesCopiedSinceLast / 1024.0 / 1024.0 / durationSec
-//                            bytesCopiedSinceLast = 0
-//                            lastReportTime = now
-//                        }
-//                        LogUtils.i("复制进度: $current/$total, ${usbFile.name}, 速度: $speed MB/s")
-//                        callback?.onProgress(current, total, usbFile.name, speed)
-//                    }
                 }
             }
 
