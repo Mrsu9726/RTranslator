@@ -34,6 +34,9 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.ys.rkapi.MyManager;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -76,6 +79,8 @@ public class Global extends Application implements DefaultLifecycleObserver {
     private static Handler mHandler = new Handler();
     private final Object lock = new Object();
 
+    private MyManager ysManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -84,26 +89,45 @@ public class Global extends Application implements DefaultLifecycleObserver {
         //initializeBluetoothCommunicator();
         getMicSensitivity();
         createNotificationChannel();
+        initYSAPI();
     }
 
-    public void initializeTranslator(NeuralNetworkApi.InitListener initListener){
-        if(translator == null) {
+    private void initYSAPI() {
+        ysManager = MyManager.getInstance(this);
+        ysManager.bindAIDLService(this);
+        ysManager.setConnectClickInterface(new MyManager.ServiceConnectedInterface() {
+            @Override
+            public void onConnect() {
+                if (Integer.valueOf(ysManager.getFirmwareVersion()) < 4)
+                    LogUtils.d("正在使用旧版本api：" + ysManager.getFirmwareVersion());
+                else
+                    LogUtils.d("正在使用新版本api：" + ysManager.getFirmwareVersion());
+            }
+        });
+    }
+
+    public MyManager getYsManager() {
+        return ysManager;
+    }
+
+    public void initializeTranslator(NeuralNetworkApi.InitListener initListener) {
+        if (translator == null) {
             translator = new Translator(this, Translator.NLLB_CACHE, initListener);
-        }else{
+        } else {
             initListener.onInitializationFinished();
         }
     }
 
-    public void initializeSpeechRecognizer(NeuralNetworkApi.InitListener initListener){
-        if(speechRecognizer == null) {
+    public void initializeSpeechRecognizer(NeuralNetworkApi.InitListener initListener) {
+        if (speechRecognizer == null) {
             speechRecognizer = new Recognizer(this, true, initListener);
-        }else{
+        } else {
             initListener.onInitializationFinished();
         }
     }
 
-    public void initializeBluetoothCommunicator(){
-        if(bluetoothCommunicator == null){
+    public void initializeBluetoothCommunicator() {
+        if (bluetoothCommunicator == null) {
             bluetoothCommunicator = new ConversationBluetoothCommunicator(this, getName(), BluetoothCommunicator.STRATEGY_P2P_WITH_RECONNECTION);
         }
     }
@@ -153,7 +177,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
 
                 @Override
                 public void onError(int reason) {
-                    if(ignoreTTSError) {
+                    if (ignoreTTSError) {
                         getTranslatorLanguages(recycleResult, new GetLocalesListListener() {
                             @Override
                             public void onSuccess(ArrayList<CustomLocale> translatorLanguages) {
@@ -174,7 +198,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
                                 responseListener.onFailure(reasons, 0);
                             }
                         });
-                    }else{
+                    } else {
                         responseListener.onFailure(new int[]{reason}, 0);
                     }
                 }
@@ -192,10 +216,10 @@ public class Global extends Application implements DefaultLifecycleObserver {
         }
     }
 
-    public void getTTSLanguages(final boolean recycleResult, final GetLocalesListListener responseListener){
-        if(recycleResult && !ttsLanguages.isEmpty()){
+    public void getTTSLanguages(final boolean recycleResult, final GetLocalesListListener responseListener) {
+        if (recycleResult && !ttsLanguages.isEmpty()) {
             responseListener.onSuccess(ttsLanguages);
-        }else{
+        } else {
             TTS.getSupportedLanguages(this, new TTS.SupportedLanguagesListener() {    //we load TTS languages to catch eventual TTS errors
                 @Override
                 public void onLanguagesListAvailable(ArrayList<CustomLocale> ttsLanguages) {
@@ -215,7 +239,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
         return translator;
     }
 
-    public void deleteTranslator(){
+    public void deleteTranslator() {
         translator = null;
     }
 
@@ -223,7 +247,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
         return speechRecognizer;
     }
 
-    public void deleteSpeechRecognizer(){
+    public void deleteSpeechRecognizer() {
         speechRecognizer = null;
     }
 
@@ -359,6 +383,10 @@ public class Global extends Application implements DefaultLifecycleObserver {
                     SharedPreferences sharedPreferences = Global.this.getSharedPreferences("default", Context.MODE_PRIVATE);
                     String code = sharedPreferences.getString("secondLanguage", null);
                     if (code != null) {
+                        // 确保语言代码有效，将"cn"转换为"zh"
+                        if ("cn".equalsIgnoreCase(code)) {
+                            code = "zh";
+                        }
                         language = CustomLocale.getInstance(code);
                     }
                 }
@@ -381,7 +409,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
         });
     }
 
-    public void getFirstAndSecondLanguages(final boolean recycleResult, final GetTwoLocaleListener responseListener){
+    public void getFirstAndSecondLanguages(final boolean recycleResult, final GetTwoLocaleListener responseListener) {
         getFirstLanguage(recycleResult, new GetLocaleListener() {
             @Override
             public void onSuccess(CustomLocale result1) {
@@ -487,7 +515,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
         });
     }
 
-    public void getFirstAndSecondTextLanguages(final boolean recycleResult, final GetTwoLocaleListener responseListener){
+    public void getFirstAndSecondTextLanguages(final boolean recycleResult, final GetTwoLocaleListener responseListener) {
         getFirstTextLanguage(recycleResult, new GetLocaleListener() {
             @Override
             public void onSuccess(CustomLocale result1) {
@@ -642,7 +670,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("name", savedName);
         editor.apply();
-        if(getBluetoothCommunicator() != null) {
+        if (getBluetoothCommunicator() != null) {
             getBluetoothCommunicator().setName(savedName);  //si aggiorna il nome anche per il comunicator
         }
     }
@@ -695,7 +723,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
     }
 
 
-    private void createNotificationChannel(){
+    private void createNotificationChannel() {
         String channelID = "service_background_notification";
         String channelName = getResources().getString(R.string.notification_channel_name);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -708,7 +736,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
     /**
      * Returns the total RAM size of the device in MB
      */
-    public long getTotalRamSize(){
+    public long getTotalRamSize() {
         ActivityManager actManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
@@ -720,7 +748,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
     /**
      * Returns the available RAM size of the device in MB
      */
-    public long getAvailableRamSize(){
+    public long getAvailableRamSize() {
         ActivityManager actManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
@@ -734,7 +762,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
      */
     public long getAvailableInternalMemorySize() {
         File internalFilesDir = this.getFilesDir();
-        if(internalFilesDir != null) {
+        if (internalFilesDir != null) {
             long freeMBInternal = new File(internalFilesDir.getAbsoluteFile().toString()).getFreeSpace() / 1000000L;
             return freeMBInternal;
         }
@@ -746,13 +774,12 @@ public class Global extends Application implements DefaultLifecycleObserver {
      */
     public long getAvailableExternalMemorySize() {
         File externalFilesDir = this.getExternalFilesDir(null);
-        if(externalFilesDir != null) {
+        if (externalFilesDir != null) {
             long freeMBExternal = new File(externalFilesDir.getAbsoluteFile().toString()).getFreeSpace() / 1000000L;
             return freeMBExternal;
         }
         return -1;
     }
-
 
 
     public boolean isNetworkOnWifi() {

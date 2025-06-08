@@ -25,6 +25,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
@@ -34,15 +35,31 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import android.content.DialogInterface;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.lxj.xpopup.XPopup;
+import com.translate.download.ApkCopyCallback;
+import com.translate.download.ModelCopyCallback;
+import com.translate.download.UsbModelCopyService;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Arrays;
 
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.LoadingActivity;
 import nie.translator.rtranslator.R;
 import nie.translator.rtranslator.tools.FileTools;
+import nie.translator.rtranslator.tools.ThreadUtils;
+import nie.translator.rtranslator.view.ProgressPopupView;
 import nie.translator.rtranslator.voice_translation.neural_networks.NeuralNetworkApi;
 
 public class DownloadFragment extends Fragment {
@@ -99,6 +116,13 @@ public class DownloadFragment extends Fragment {
     private TextView progressDescriptionText;
     private TextView progressNumbersText;
 
+    private ConstraintLayout downloadLayout;
+
+    private TextView usbCopyLayout;
+    private boolean operationStarted = false;
+
+    ProgressPopupView progressPopup;
+
     public DownloadFragment() {
         // Required empty public constructor
     }
@@ -106,7 +130,71 @@ public class DownloadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UsbModelCopyService.INSTANCE.registerUsbReceiver(requireContext(), new ModelCopyCallback() {
+            @Override
+            public void onStart(int totalFiles) {
+                LogUtils.d("copy 开始");
+            }
 
+            @Override
+            public void onProgress(int current, int total, @NotNull String filename, double speedMbps) {
+                ThreadUtils.getInstance().executeMain(new Runnable() {
+                    @Override
+                    public void run() {
+                        showProgressPopup();
+                        int percentage = 0;
+                        if (total > 0) {
+                            percentage = current * 100 / total;
+                        }
+                        if (progressPopup != null)
+                            progressPopup.setProgress(percentage);
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess() {
+                ThreadUtils.getInstance().executeMain(new Runnable() {
+                    @Override
+                    public void run() {
+                        SharedPreferences sharedPreferences = global.getSharedPreferences("default", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong("currentDownloadId", -2);
+                        editor.apply();
+                        if (progressPopup != null){
+                            progressPopup.setTitle("Copy Success");
+                        }
+                        startRTranslator();
+                    }
+                });
+                LogUtils.d("copy 成功");
+            }
+
+            @Override
+            public void onFailure(@NotNull String error) {
+                LogUtils.e("copy 失败：" + error);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtils.e("copy 取消");
+            }
+        });
+    }
+
+    private void showProgressPopup() {
+        if (progressPopup == null) {
+            // 创建弹窗
+            progressPopup = new ProgressPopupView(requireContext());
+            progressPopup.setTitle("正在拷贝...");
+
+            // 显示弹窗
+            new XPopup.Builder(requireContext())
+                    .dismissOnBackPressed(false)
+                    .dismissOnTouchOutside(false)
+                    .asCustom(progressPopup)
+                    .show();
+        }
     }
 
     @Override
@@ -127,6 +215,8 @@ public class DownloadFragment extends Fragment {
         pauseButton = view.findViewById(R.id.pauseButton);
         pauseButton.setTag("iconCancel");
         progressNumbersText = view.findViewById(R.id.progress_numbers);
+        downloadLayout = view.findViewById(R.id.downloadContainer);
+        usbCopyLayout = view.findViewById(R.id.usb_copy_layout);
     }
 
     @Override
@@ -134,17 +224,18 @@ public class DownloadFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         activity = (AccessActivity) requireActivity();
         global = (Global) activity.getApplication();
+        global.setFirstStart(false);
         mainHandler = new android.os.Handler(Looper.getMainLooper());
         downloader = new Downloader(global);
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(downloadErrorText.getVisibility() == View.VISIBLE){  //that means that we should restart the download
+                if (downloadErrorText.getVisibility() == View.VISIBLE) {  //that means that we should restart the download
                     downloadErrorText.setVisibility(View.GONE);
                     transferErrorText.setVisibility(View.GONE);
                     retryButton.setVisibility(View.GONE);
                     retryCurrentDownload();
-                }else if(transferErrorText.getVisibility() == View.VISIBLE){
+                } else if (transferErrorText.getVisibility() == View.VISIBLE) {
                     downloadErrorText.setVisibility(View.GONE);
                     transferErrorText.setVisibility(View.GONE);
                     retryButton.setVisibility(View.GONE);
@@ -155,18 +246,18 @@ public class DownloadFragment extends Fragment {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(pauseButton.getTag().equals("iconCancel")){
+                if (pauseButton.getTag().equals("iconCancel")) {
                     //we pause the download
                     boolean success = downloader.cancelRunningDownload();
-                    if(success) {
+                    if (success) {
                         //we change the icon and tag
                         pauseButton.setImageResource(R.drawable.play_icon);
                         //pauseButton.setImageDrawable(global.getResources().getDrawable(R.drawable.play_icon, null));
                         pauseButton.setTag("iconPlay");
                     }
-                }else{
+                } else {
                     int runningDownloadStatus = downloader.getRunningDownloadStatus();
-                    if(runningDownloadStatus == -1 || runningDownloadStatus == DownloadManager.STATUS_FAILED || runningDownloadStatus == DownloadManager.STATUS_PAUSED) {
+                    if (runningDownloadStatus == -1 || runningDownloadStatus == DownloadManager.STATUS_FAILED || runningDownloadStatus == DownloadManager.STATUS_PAUSED) {
                         //we resume the download
                         retryCurrentDownload();
                     }
@@ -182,17 +273,17 @@ public class DownloadFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if(global != null) {
+        if (global != null) {
             //if the internal or external free memory are low, we show a warning
             float requiredSize = 0;
-            for (int i=0; i<DownloadFragment.DOWNLOAD_SIZES.length; i++){
+            for (int i = 0; i < DownloadFragment.DOWNLOAD_SIZES.length; i++) {
                 requiredSize = requiredSize + DownloadFragment.DOWNLOAD_SIZES[i];
             }
             requiredSize = requiredSize / 1000;   //we convert from Kb to Mb
             requiredSize = requiredSize + 800;   //we add a margin (because the transfer process requires more space)
             long ex = global.getAvailableExternalMemorySize();
             long in = global.getAvailableInternalMemorySize();
-            if(global.getAvailableExternalMemorySize() < requiredSize || global.getAvailableInternalMemorySize() < requiredSize){
+            if (global.getAvailableExternalMemorySize() < requiredSize || global.getAvailableInternalMemorySize() < requiredSize) {
                 //we show the warning
                 storageWarningText.setVisibility(View.VISIBLE);
             }
@@ -204,21 +295,21 @@ public class DownloadFragment extends Fragment {
                 public void run() {
                     while (!Thread.currentThread().isInterrupted()) {
                         try {
-                            if(downloadErrorText.getVisibility() == View.GONE && transferErrorText.getVisibility() == View.GONE && retryButton.getVisibility() == View.GONE && getContext() != null) {
+                            if (downloadErrorText.getVisibility() == View.GONE && transferErrorText.getVisibility() == View.GONE && retryButton.getVisibility() == View.GONE && getContext() != null) {
                                 boolean error = checkDownloadOrTransferErrors(false); //we check and show eventual errors in the download or transfer of the models
                                 if (!error) {
                                     //we update the Gui according to the downloads status
                                     mainHandler.post(() -> {
-                                        if(getContext() != null) {
+                                        if (getContext() != null) {
                                             updateProgress();
                                             //we update the progressDescriptionText
                                             SharedPreferences sharedPreferences = global.getSharedPreferences("default", Context.MODE_PRIVATE);
-                                            if(NeuralNetworkApi.isVerifying){
+                                            if (NeuralNetworkApi.isVerifying) {
                                                 String lastDownloadSuccess = sharedPreferences.getString("lastDownloadSuccess", "");
                                                 String verifyingModelName = null;
-                                                if(lastDownloadSuccess.isEmpty()){  //it means that we are checking integrity of the first download
+                                                if (lastDownloadSuccess.isEmpty()) {  //it means that we are checking integrity of the first download
                                                     verifyingModelName = DOWNLOAD_NAMES[0];
-                                                }else{
+                                                } else {
                                                     int nameIndex = -1;
                                                     for (int i = 0; i < DownloadFragment.DOWNLOAD_NAMES.length; i++) {
                                                         if (DownloadFragment.DOWNLOAD_NAMES[i].equals(lastDownloadSuccess)) {
@@ -226,14 +317,14 @@ public class DownloadFragment extends Fragment {
                                                             break;
                                                         }
                                                     }
-                                                    if(nameIndex >= 0){
-                                                        verifyingModelName = DOWNLOAD_NAMES[nameIndex+1];
+                                                    if (nameIndex >= 0) {
+                                                        verifyingModelName = DOWNLOAD_NAMES[nameIndex + 1];
                                                     }
                                                 }
-                                                if(verifyingModelName != null){
+                                                if (verifyingModelName != null) {
                                                     progressDescriptionText.setText(getString(R.string.description_integrity_check, verifyingModelName));
                                                 }
-                                            }else {
+                                            } else {
                                                 int indexOfRunningTransfer = getIndexOfRunningTransfer();
                                                 if (indexOfRunningTransfer != -1) {
                                                     String downloadName = DOWNLOAD_NAMES[indexOfRunningTransfer];
@@ -266,42 +357,41 @@ public class DownloadFragment extends Fragment {
                     }
                 }
             });
-
-            SharedPreferences sharedPreferences = global.getSharedPreferences("default", Context.MODE_PRIVATE);
-            long currentDownloadId = sharedPreferences.getLong("currentDownloadId", -1);
-
-            if(currentDownloadId == -1){  //if we not yet started any download
-                new Thread(() -> DownloadReceiver.internalCheckAndStartNextDownload(global, downloader, -1)).start();
-                guiUpdater.start();
-
-            }else if(currentDownloadId == -2) {  //if the downloads are all completed
-                startRTranslator();
-            }else{
-                checkDownloadOrTransferErrors(true);
-                guiUpdater.start();
-            }
+            final SharedPreferences sharedPreferences = requireContext().getSharedPreferences("default", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor;
+            editor = sharedPreferences.edit();
+            //假设已经拷贝了模型
+//            editor.putString("name", "syntalk");
+//            editor.putLong("currentDownloadId", -2);
+//            editor.apply();
+//            startRTranslator();
+            showSourceSelectionDialog();
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if(!guiUpdater.isInterrupted()) {
+        if (!guiUpdater.isInterrupted()) {
             guiUpdater.interrupt();
             //we cancel the storage warning (in this way when the user reopens the app the warning is shown only if the storage is still low)
             storageWarningText.setVisibility(View.GONE);
         }
+        UsbModelCopyService.INSTANCE.cancel();
+        if (progressPopup != null){
+            progressPopup.dismiss();
+        }
     }
 
-    private boolean checkDownloadOrTransferErrors(boolean changePauseButtonIcon){
+    private boolean checkDownloadOrTransferErrors(boolean changePauseButtonIcon) {
         //we check and show errors for eventual download failure
         int downloadStatus = downloader.getRunningDownloadStatus();
-        if(downloadStatus == DownloadManager.STATUS_FAILED){
+        if (downloadStatus == DownloadManager.STATUS_FAILED) {
             showDownloadError();
             return true;
         }
-        if(downloadStatus == -1){
-            if(changePauseButtonIcon) {
+        if (downloadStatus == -1) {
+            if (changePauseButtonIcon) {
                 mainHandler.post(() -> {
                     //we change the icon and tag of the pauseButton
                     pauseButton.setImageResource(R.drawable.play_icon);
@@ -315,14 +405,14 @@ public class DownloadFragment extends Fragment {
         String lastDownloadSuccess = sharedPreferences.getString("lastDownloadSuccess", "");
         String lastTransferSuccess = sharedPreferences.getString("lastTransferSuccess", "");
         String lastTransferFailure = sharedPreferences.getString("lastTransferFailure", "");
-        if(!lastDownloadSuccess.isEmpty() && !lastDownloadSuccess.equals(lastTransferSuccess) && lastDownloadSuccess.equals(lastTransferFailure)){
+        if (!lastDownloadSuccess.isEmpty() && !lastDownloadSuccess.equals(lastTransferSuccess) && lastDownloadSuccess.equals(lastTransferFailure)) {
             showTransferError();
             return true;
         }
         return false;
     }
 
-    private void showDownloadError(){
+    private void showDownloadError() {
         //we show the download error and the retry button
         mainHandler.post(() -> {
             downloadErrorText.setVisibility(View.VISIBLE);
@@ -334,7 +424,7 @@ public class DownloadFragment extends Fragment {
         });
     }
 
-    private void showTransferError(){
+    private void showTransferError() {
         //we show the transfer error and the retry button
         mainHandler.post(() -> {
             downloadErrorText.setVisibility(View.GONE);
@@ -343,27 +433,36 @@ public class DownloadFragment extends Fragment {
         });
     }
 
-    private void updateProgress(){
+    private void updateProgress() {
         //we update the progressbar
         int progress = downloader.getDownloadProgress(progressBar.getMax());
         progressBar.setProgress(progress, true);
         //we update the progressNumbersText
         float totalSize = 0;
-        for (int i=0; i<DownloadFragment.DOWNLOAD_SIZES.length; i++){
+        for (int i = 0; i < DownloadFragment.DOWNLOAD_SIZES.length; i++) {
             totalSize = totalSize + DownloadFragment.DOWNLOAD_SIZES[i];
         }
-        totalSize = totalSize/1000000;   //we convert from Kb to Gb
-        float downloadedGb = progress*totalSize/progressBar.getMax();    //progress : progressBar.getMax() = x : totalSize   (where x is downloadedGb)
+        totalSize = totalSize / 1000000;   //we convert from Kb to Gb
+        float downloadedGb = progress * totalSize / progressBar.getMax();    //progress : progressBar.getMax() = x : totalSize   (where x is downloadedGb)
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        progressNumbersText.setText(decimalFormat.format(downloadedGb)+" / "+decimalFormat.format(totalSize)+" GB");
+        progressNumbersText.setText(decimalFormat.format(downloadedGb) + " / " + decimalFormat.format(totalSize) + " GB");
     }
 
-    private int getIndexOfRunningTransfer(){
+    private void updateProgress(int progress, int totalSize, String filename) {
+        //we update the progressbar
+        progressBar.setProgress(progress, true);
+        //we update the progressNumbersText
+        float downloadedGb = progress * totalSize / progressBar.getMax();    //progress : progressBar.getMax() = x : totalSize   (where x is downloadedGb)
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        progressNumbersText.setText(filename + "--" + decimalFormat.format(downloadedGb) + " / " + decimalFormat.format(totalSize) + "");
+    }
+
+    private int getIndexOfRunningTransfer() {
         SharedPreferences sharedPreferences = global.getSharedPreferences("default", Context.MODE_PRIVATE);
         String lastDownloadSuccess = sharedPreferences.getString("lastDownloadSuccess", "");
         String lastTransferSuccess = sharedPreferences.getString("lastTransferSuccess", "");
         String lastTransferFailure = sharedPreferences.getString("lastTransferFailure", "");
-        if(!lastDownloadSuccess.isEmpty() && !lastDownloadSuccess.equals(lastTransferSuccess) && !lastDownloadSuccess.equals(lastTransferFailure)){
+        if (!lastDownloadSuccess.isEmpty() && !lastDownloadSuccess.equals(lastTransferSuccess) && !lastDownloadSuccess.equals(lastTransferFailure)) {
             int nameIndex = -1;
             for (int i = 0; i < DownloadFragment.DOWNLOAD_NAMES.length; i++) {
                 if (DownloadFragment.DOWNLOAD_NAMES[i].equals(lastDownloadSuccess)) {
@@ -376,21 +475,21 @@ public class DownloadFragment extends Fragment {
         return -1;
     }
 
-    private void retryCurrentDownload(){
+    private void retryCurrentDownload() {
         SharedPreferences sharedPreferences = global.getSharedPreferences("default", Context.MODE_PRIVATE);
         long currentDownloadId = sharedPreferences.getLong("currentDownloadId", -1);
         int urlIndex = downloader.findDownloadUrlIndex(currentDownloadId);
-        if(urlIndex >= 0){
-            if(downloader.getRunningDownloadStatus() != DownloadManager.STATUS_RUNNING) {
+        if (urlIndex >= 0) {
+            if (downloader.getRunningDownloadStatus() != DownloadManager.STATUS_RUNNING) {
                 //we restart the download
                 long downloadId = downloader.downloadModel(DOWNLOAD_URLS[urlIndex], DOWNLOAD_NAMES[urlIndex]);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putLong("currentDownloadId", downloadId);
                 editor.apply();
             }
-        }else{
+        } else {
             String lastDownloadSuccess = sharedPreferences.getString("lastDownloadSuccess", "");
-            if(!lastDownloadSuccess.isEmpty()){
+            if (!lastDownloadSuccess.isEmpty()) {
                 //we find the index of the lastDownloadSuccess
                 int nameIndex = -1;
                 for (int i = 0; i < DownloadFragment.DOWNLOAD_NAMES.length; i++) {
@@ -399,14 +498,14 @@ public class DownloadFragment extends Fragment {
                         break;
                     }
                 }
-                if(nameIndex != -1 && (nameIndex+1) < DOWNLOAD_URLS.length) {
+                if (nameIndex != -1 && (nameIndex + 1) < DOWNLOAD_URLS.length) {
                     //we restart the download
-                    long downloadId = downloader.downloadModel(DOWNLOAD_URLS[nameIndex+1], DOWNLOAD_NAMES[nameIndex+1]);
+                    long downloadId = downloader.downloadModel(DOWNLOAD_URLS[nameIndex + 1], DOWNLOAD_NAMES[nameIndex + 1]);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putLong("currentDownloadId", downloadId);
                     editor.apply();
                 }
-            }else{
+            } else {
                 //we restart the first download
                 long downloadId = downloader.downloadModel(DOWNLOAD_URLS[0], DOWNLOAD_NAMES[0]);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -416,10 +515,10 @@ public class DownloadFragment extends Fragment {
         }
     }
 
-    private void retryCurrentTransfer(){
+    private void retryCurrentTransfer() {
         SharedPreferences sharedPreferences = global.getSharedPreferences("default", Context.MODE_PRIVATE);
         String lastTransferFailure = sharedPreferences.getString("lastTransferFailure", "");
-        if(lastTransferFailure.length()>0){
+        if (lastTransferFailure.length() > 0) {
             //we find the index of the lastDownloadSuccess
             int nameIndex = -1;
             for (int i = 0; i < DownloadFragment.DOWNLOAD_NAMES.length; i++) {
@@ -428,7 +527,7 @@ public class DownloadFragment extends Fragment {
                     break;
                 }
             }
-            if(nameIndex != -1) {
+            if (nameIndex != -1) {
                 //we restart the transfer
                 File from = new File(global.getExternalFilesDir(null) + "/" + DownloadFragment.DOWNLOAD_NAMES[nameIndex]);
                 File to = new File(global.getFilesDir() + "/" + DownloadFragment.DOWNLOAD_NAMES[nameIndex]);
@@ -466,7 +565,47 @@ public class DownloadFragment extends Fragment {
         }
     }
 
-    private void startRTranslator(){
+    private void showSourceSelectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Download Or Copy Models");
+        String[] options = new String[]{"Online", "USB Copy"};
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                if (which == 0) {
+                    startOnlineDownload();
+                } else {
+                    startUsbCopy();
+                }
+            }
+        });
+        builder.setCancelable(false);
+        builder.create().show();
+    }
+
+    private void startOnlineDownload() {
+        if (operationStarted) return;
+        downloadLayout.setVisibility(View.VISIBLE);
+        operationStarted = true;
+        SharedPreferences sharedPreferences = global.getSharedPreferences("default", Context.MODE_PRIVATE);
+        long currentDownloadId = sharedPreferences.getLong("currentDownloadId", -1);
+        if (currentDownloadId == -2) {  //if the downloads are all completed
+            startRTranslator();
+        } else {
+            checkDownloadOrTransferErrors(true);
+            guiUpdater.start();
+        }
+    }
+
+    private void startUsbCopy() {
+        //检查U盘是否已经插入
+        usbCopyLayout.setVisibility(View.VISIBLE);
+//        if (UsbModelCopyService.INSTANCE.isUsbConnected()) {
+//            ToastUtils.showShort("请先插入优盘");
+//        }
+    }
+
+    private void startRTranslator() {
         if (activity != null) {
             //modification of the firstStart
             global.setFirstStart(false);
@@ -477,5 +616,21 @@ public class DownloadFragment extends Fragment {
             activity.startActivity(intent);
             activity.finish();
         }
+    }
+
+    private void checkModels(String modelPath) {
+        NeuralNetworkApi.testModelIntegrity(modelPath, new NeuralNetworkApi.InitListener() {
+            @Override
+            public void onInitializationFinished() {   //the model to be downloaded next is already in internal memory and it is not corrupted
+                //we save the success of the download
+
+            }
+
+            @Override
+            public void onError(int[] reasons, long value) {
+                //删除，并记录
+                LogUtils.e("模型校验失败：" + modelPath + ", 原因：" + Arrays.toString(reasons) + " " + value);
+            }
+        });
     }
 }

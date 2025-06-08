@@ -8,12 +8,13 @@
     android:fitsSystemWindows="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/downloadContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:focusableInTouchMode="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/accessTitle"
@@ -132,14 +133,14 @@
             android:layout_marginBottom="24dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/reload_icon"
-            android:tint="@color/dark_gray"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/progress_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/downloadSummary"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0"
+            app:tint="@color/dark_gray" />
 
         <ImageButton
             android:id="@+id/pauseButton"
@@ -150,12 +151,12 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/cancel_icon"
-            android:tint="@color/primary_dark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/progress_numbers"
             app:layout_constraintTop_toBottomOf="@+id/downloadSummary"
-            app:layout_constraintVertical_bias="0.976" />
+            app:layout_constraintVertical_bias="0.976"
+            app:tint="@color/primary_dark" />
 
         <TextView
             android:id="@+id/progress_numbers"
@@ -185,4 +186,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/usb_copy_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|left"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:textSize="36sp"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:text="1、请在U盘根目录新建文件夹syntalk/models\n2、在models下面放入所有的模型文件\n3、插入优盘，开始自动拷贝，拷贝完成后拔掉优盘，断电重启设备"/>
 </FrameLayout>

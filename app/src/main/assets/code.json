@@ -3,1722 +3,1464 @@
     "code": "93",
     "pinyin": "AFUHAN",
     "name": "افغانستان",
-    "locale": "fa",
-    "new_locale": "AF"
+    "locale": "af"
   },
   {
     "code": "358",
     "pinyin": "AOLAN",
     "name": "Åland",
-    "locale": "sv",
-    "new_locale": "AX"
+    "locale": "ax"
   },
   {
     "code": "355",
     "pinyin": "AERBANIYA",
     "name": "Shqipëria",
-    "locale": "sq",
-    "new_locale": "AL"
+    "locale": "al"
   },
   {
     "code": "213",
     "pinyin": "AERJILIYA",
     "name": "الجزائر",
-    "locale": "ar",
-    "new_locale": "DZ"
+    "locale": "dz"
   },
   {
     "code": "1684",
     "pinyin": "MEISHUSAMOYA",
     "name": "American Samoa",
-    "locale": "en",
-    "new_locale": "AS"
-  },
-  {
-    "code": "376",
-    "pinyin": "ANDAOER",
-    "name": "Andorra",
-    "locale": "ca",
-    "new_locale": "AD"
+    "locale": "as"
   },
   {
     "code": "244",
     "pinyin": "ANGELA",
     "name": "Angola",
-    "locale": "pt",
-    "new_locale": "AO"
+    "locale": "ao"
   },
   {
     "code": "1264",
     "pinyin": "ANGUILA",
     "name": "Anguilla",
-    "locale": "en",
-    "new_locale": "AI"
+    "locale": "ai"
   },
   {
     "code": "672",
     "pinyin": "NANJIZHOU",
     "name": "Antarctica",
-    "locale": "",
-    "new_locale": "AQ"
+    "locale": "aq"
   },
   {
     "code": "1268",
     "pinyin": "ANTIGUAHEBABUDA",
     "name": "Antigua and Barbuda",
-    "locale": "en",
-    "new_locale": "AG"
+    "locale": "ag"
   },
   {
     "code": "54",
     "pinyin": "AGENTING",
     "name": "Argentina",
-    "locale": "es",
-    "new_locale": "AR"
+    "locale": "es"
   },
   {
     "code": "374",
     "pinyin": "YAMEINIYA",
     "name": "Հայաստան",
-    "locale": "hy",
-    "new_locale": "AM"
+    "locale": "am"
   },
   {
     "code": "297",
     "pinyin": "ALUBA",
     "name": "Aruba",
-    "locale": "nl",
-    "new_locale": "AW"
+    "locale": "aw"
   },
   {
     "code": "61",
     "pinyin": "AODALIYA",
     "name": "Australia",
-    "locale": "en",
-    "new_locale": "AU"
+    "locale": "au"
   },
   {
     "code": "43",
     "pinyin": "AODILI",
     "name": "Österreich",
-    "locale": "de",
-    "new_locale": "AT"
+    "locale": "at"
   },
   {
     "code": "994",
     "pinyin": "ASAIBAIJIANG",
     "name": "Azərbaycan",
-    "locale": "az",
-    "new_locale": "AZ"
+    "locale": "az"
   },
   {
     "code": "1242",
     "pinyin": "BAHAMA",
     "name": "Bahamas",
-    "locale": "en",
-    "new_locale": "BS"
+    "locale": "bs"
   },
   {
     "code": "973",
     "pinyin": "BALIN",
     "name": "‏البحرين",
-    "locale": "ar",
-    "new_locale": "BH"
+    "locale": "bh"
   },
   {
     "code": "880",
     "pinyin": "MENGJIALAGUO",
     "name": "Bangladesh",
-    "locale": "bn",
-    "new_locale": "BD"
+    "locale": "bd"
   },
   {
     "code": "1246",
     "pinyin": "BABADUOSI",
     "name": "Barbados",
-    "locale": "en",
-    "new_locale": "BB"
+    "locale": "bb"
   },
   {
     "code": "375",
     "pinyin": "BAIELUOSI",
     "name": "Белару́сь",
-    "locale": "be",
-    "new_locale": "BY"
+    "locale": "by"
   },
   {
     "code": "32",
     "pinyin": "BILISHI",
     "name": "België",
-    "locale": "nl",
-    "new_locale": "BE"
+    "locale": "be"
   },
   {
     "code": "501",
     "pinyin": "BOLIZI",
     "name": "Belize",
-    "locale": "en",
-    "new_locale": "BZ"
+    "locale": "bz"
   },
   {
     "code": "229",
     "pinyin": "BEINING",
     "name": "Bénin",
-    "locale": "fr",
-    "new_locale": "BJ"
+    "locale": "bj"
   },
   {
     "code": "1441",
     "pinyin": "BAIMUDA",
     "name": "Bermuda",
-    "locale": "en",
-    "new_locale": "BM"
+    "locale": "bm"
   },
   {
     "code": "975",
     "pinyin": "BUDAN",
     "name": "ʼbrug-yul",
-    "locale": "dz",
-    "new_locale": "BT"
+    "locale": "bt"
   },
   {
     "code": "591",
     "pinyin": "BOLIWEIYA",
     "name": "Bolivia",
-    "locale": "es",
-    "new_locale": "BO"
+    "locale": "bo"
   },
   {
     "code": "387",
     "pinyin": "BOHEI",
     "name": "Bosna i Hercegovina",
-    "locale": "bs",
-    "new_locale": "BA"
+    "locale": "ba"
   },
   {
     "code": "267",
     "pinyin": "BOCIWANA",
     "name": "Botswana",
-    "locale": "en",
-    "new_locale": "BW"
+    "locale": "bw"
   },
   {
     "code": "47",
     "pinyin": "BUWEIDAO",
     "name": "Bouvetøya",
-    "locale": "",
-    "new_locale": "BV"
+    "locale": "bv"
   },
   {
     "code": "55",
     "pinyin": "BAXI",
     "name": "Brasil",
-    "locale": "pt",
-    "new_locale": "BR"
+    "locale": "br"
   },
   {
     "code": "246",
     "pinyin": "YINGSHUYINDUYANGLINGDI",
     "name": "British Indian Ocean Territory",
-    "locale": "en",
-    "new_locale": "IO"
+    "locale": "io"
   },
   {
     "code": "673",
     "pinyin": "WENLAI",
     "name": "Negara Brunei Darussalam",
-    "locale": "ms",
-    "new_locale": "BN"
+    "locale": "bn"
   },
   {
     "code": "359",
     "pinyin": "BAOJIALIYA",
     "name": "България",
-    "locale": "bg",
-    "new_locale": "BG"
+    "locale": "bg"
   },
   {
     "code": "226",
     "pinyin": "BUJINAFASUO",
     "name": "Burkina Faso",
-    "locale": "fr",
-    "new_locale": "BF"
+    "locale": "bf"
   },
   {
     "code": "257",
     "pinyin": "BULONGDI",
     "name": "Burundi",
-    "locale": "rn",
-    "new_locale": "BI"
+    "locale": "bi"
   },
   {
     "code": "855",
     "pinyin": "JIANPUZHAI",
     "name": "Cambodia",
-    "locale": "km",
-    "new_locale": "KH"
+    "locale": "kh"
   },
   {
     "code": "237",
     "pinyin": "KAMAILONG",
     "name": "Cameroon",
-    "locale": "fr",
-    "new_locale": "CM"
+    "locale": "cm"
   },
   {
     "code": "1",
     "pinyin": "JIANADA",
     "name": "Canada",
-    "locale": "en",
-    "new_locale": "CA"
+    "locale": "ca"
   },
   {
     "code": "238",
     "pinyin": "FODEJIAO",
     "name": "Cabo Verde",
-    "locale": "pt",
-    "new_locale": "CV"
+    "locale": "cv"
   },
   {
     "code": "1345",
     "pinyin": "KAIMANQUNDAO",
     "name": "Cayman Islands",
-    "locale": "en",
-    "new_locale": "KY"
+    "locale": "ky"
   },
   {
     "code": "236",
     "pinyin": "ZHONGFEI",
     "name": "Ködörösêse tî Bêafrîka",
-    "locale": "fr",
-    "new_locale": "CF"
+    "locale": "cf"
   },
   {
     "code": "235",
     "pinyin": "ZHADE",
     "name": "Tchad",
-    "locale": "fr",
-    "new_locale": "TD"
+    "locale": "td"
   },
   {
     "code": "56",
     "pinyin": "ZHILI",
     "name": "Chile",
-    "locale": "es",
-    "new_locale": "CL"
+    "locale": "cl"
   },
   {
     "code": "86",
     "pinyin": "ZHONGGUO",
     "name": "中国",
-    "locale": "zh",
-    "new_locale": "CN"
+    "locale": "zh"
   },
   {
     "code": "61",
     "pinyin": "SHENGDANDAO",
     "name": "Christmas Island",
-    "locale": "en",
-    "new_locale": "CX"
+    "locale": "cx"
   },
   {
     "code": "61",
     "pinyin": "KEKESI（JILIN）QUNDAO",
     "name": "Cocos (Keeling) Islands",
-    "locale": "en",
-    "new_locale": "CC"
+    "locale": "cc"
   },
   {
     "code": "57",
     "pinyin": "GELUNBIYA",
     "name": "Colombia",
-    "locale": "es",
-    "new_locale": "CO"
+    "locale": "co"
   },
   {
     "code": "269",
     "pinyin": "KEMOLUO",
     "name": "Komori",
-    "locale": "ar",
-    "new_locale": "KM"
+    "locale": "km"
   },
   {
     "code": "242",
     "pinyin": "GANGGUO（BU）",
     "name": "République du Congo",
-    "locale": "fr",
-    "new_locale": "CG"
+    "locale": "cg"
   },
   {
     "code": "243",
     "pinyin": "GANGGUO（JIN）",
     "name": "République démocratique du Congo",
-    "locale": "sw",
-    "new_locale": "CD"
+    "locale": "cd"
   },
   {
     "code": "682",
     "pinyin": "KUKEQUNDAO",
     "name": "Cook Islands",
-    "locale": "en",
-    "new_locale": "CK"
+    "locale": "ck"
   },
   {
     "code": "506",
     "pinyin": "GESIDALIJIA",
     "name": "Costa Rica",
-    "locale": "es",
-    "new_locale": "CR"
+    "locale": "cr"
   },
   {
     "code": "225",
     "pinyin": "KETEDIWA",
     "name": "Côte d'Ivoire",
-    "locale": "fr",
-    "new_locale": "CI"
+    "locale": "ci"
   },
   {
     "code": "385",
     "pinyin": "KELUODIYA",
     "name": "Hrvatska",
-    "locale": "hr",
-    "new_locale": "HR"
+    "locale": "hr"
   },
   {
     "code": "53",
     "pinyin": "GUBA",
     "name": "Cuba",
-    "locale": "es",
-    "new_locale": "CU"
+    "locale": "cu"
   },
   {
     "code": "357",
     "pinyin": "SAIPULUSI",
     "name": "Κύπρος",
-    "locale": "el",
-    "new_locale": "CY"
+    "locale": "cy"
   },
   {
     "code": "420",
     "pinyin": "JIEKE",
     "name": "Česká republika",
-    "locale": "cs",
-    "new_locale": "CZ"
+    "locale": "cz"
   },
   {
     "code": "45",
     "pinyin": "DANMAI",
     "name": "Danmark",
-    "locale": "da",
-    "new_locale": "DK"
+    "locale": "da"
   },
   {
     "code": "253",
     "pinyin": "JIBUTI",
     "name": "Djibouti",
-    "locale": "aa",
-    "new_locale": "DJ"
+    "locale": "dj"
   },
   {
     "code": "1767",
     "pinyin": "DUOMINIKE",
     "name": "Dominica",
-    "locale": "en",
-    "new_locale": "DM"
+    "locale": "dm"
   },
   {
     "code": "1",
     "pinyin": "DUOMINIJIA",
     "name": "República Dominicana",
-    "locale": "es",
-    "new_locale": "DO"
+    "locale": "do"
   },
   {
     "code": "593",
     "pinyin": "EGUADUOER",
     "name": "Ecuador",
-    "locale": "es",
-    "new_locale": "EC"
+    "locale": "ec"
   },
   {
     "code": "20",
     "pinyin": "AIJI",
     "name": "مصر‎",
-    "locale": "ar",
-    "new_locale": "EG"
+    "locale": "eg"
   },
   {
     "code": "503",
     "pinyin": "SAERWADUO",
     "name": "El Salvador",
-    "locale": "es",
-    "new_locale": "SV"
+    "locale": "sv"
   },
   {
     "code": "240",
     "pinyin": "CHIDAOJINEIYA",
     "name": "Guinea Ecuatorial",
-    "locale": "es",
-    "new_locale": "GQ"
+    "locale": "gq"
   },
   {
     "code": "291",
     "pinyin": "ELITELIYA",
     "name": "ኤርትራ",
-    "locale": "ti",
-    "new_locale": "ER"
+    "locale": "er"
   },
   {
     "code": "372",
     "pinyin": "AISHANIYA",
     "name": "Eesti",
-    "locale": "et",
-    "new_locale": "EE"
+    "locale": "ee"
   },
   {
     "code": "251",
     "pinyin": "AISAIEBIYA",
     "name": "ኢትዮጵያ",
-    "locale": "am",
-    "new_locale": "ET"
+    "locale": "et"
   },
   {
     "code": "500",
     "pinyin": "FUKELANQUNDAO",
     "name": "Falkland Islands",
-    "locale": "en",
-    "new_locale": "FK"
+    "locale": "fk"
   },
   {
     "code": "298",
     "pinyin": "FALUOQUNDAO",
     "name": "Føroyar",
-    "locale": "fo",
-    "new_locale": "FO"
+    "locale": "fo"
   },
   {
     "code": "679",
     "pinyin": "FEIJI",
     "name": "Fiji",
-    "locale": "en",
-    "new_locale": "FJ"
+    "locale": "fj"
   },
   {
     "code": "358",
     "pinyin": "FENLAN",
     "name": "Suomi",
-    "locale": "fi",
-    "new_locale": "FI"
+    "locale": "fi"
   },
   {
     "code": "33",
     "pinyin": "FAGUO",
     "name": "France",
-    "locale": "fr",
-    "new_locale": "FR"
+    "locale": "fr"
   },
   {
     "code": "594",
     "pinyin": "FASHUGUIYANEI",
     "name": "Guyane française",
-    "locale": "fr",
-    "new_locale": "GF"
+    "locale": "gf"
   },
   {
     "code": "689",
     "pinyin": "FASHUBOLINIXIYA",
     "name": "Polynésie française",
-    "locale": "fr",
-    "new_locale": "PF"
+    "locale": "pf"
   },
   {
     "code": "262",
     "pinyin": "FASHUNANBULINGDI",
     "name": "Territoire des Terres australes et antarctiques fr",
-    "locale": "",
-    "new_locale": "TF"
+    "locale": "tf"
   },
   {
     "code": "241",
     "pinyin": "JIAPENG",
     "name": "Gabon",
-    "locale": "fr",
-    "new_locale": "GA"
+    "locale": "ga"
   },
   {
     "code": "220",
     "pinyin": "GANGBIYA",
     "name": "Gambia",
-    "locale": "en",
-    "new_locale": "GM"
+    "locale": "gm"
   },
   {
     "code": "995",
     "pinyin": "GELUJIYA",
     "name": "საქართველო",
-    "locale": "ka",
-    "new_locale": "GE"
+    "locale": "ge"
   },
   {
     "code": "49",
     "pinyin": "DEGUO",
     "name": "Deutschland",
-    "locale": "de",
-    "new_locale": "DE"
+    "locale": "de"
   },
   {
     "code": "233",
     "pinyin": "JIANA",
     "name": "Ghana",
-    "locale": "ak",
-    "new_locale": "GH"
+    "locale": "gh"
   },
   {
     "code": "350",
     "pinyin": "ZHIBULUOTUO",
     "name": "Gibraltar",
-    "locale": "en",
-    "new_locale": "GI"
+    "locale": "gi"
   },
   {
     "code": "30",
     "pinyin": "XILA",
     "name": "Ελλάδα",
-    "locale": "el",
-    "new_locale": "GR"
+    "locale": "gr"
   },
   {
     "code": "299",
     "pinyin": "GELINGLAN",
     "name": "Kalaallit Nunaat",
-    "locale": "kl",
-    "new_locale": "GL"
+    "locale": "gl"
   },
   {
     "code": "1473",
     "pinyin": "GELINNADA",
     "name": "Grenada",
-    "locale": "en",
-    "new_locale": "GD"
+    "locale": "gd"
   },
   {
     "code": "590",
     "pinyin": "GUADELUOPU",
     "name": "Guadeloupe",
-    "locale": "fr",
-    "new_locale": "GP"
+    "locale": "gp"
   },
   {
     "code": "1671",
     "pinyin": "GUANDAO",
     "name": "Guam",
-    "locale": "en",
-    "new_locale": "GU"
+    "locale": "gu"
   },
   {
     "code": "502",
     "pinyin": "WEIDIMALA",
     "name": "Guatemala",
-    "locale": "es",
-    "new_locale": "GT"
+    "locale": "gt"
   },
   {
     "code": "44",
     "pinyin": "GENXI",
     "name": "Guernsey",
-    "locale": "en",
-    "new_locale": "GG"
+    "locale": "gg"
   },
   {
     "code": "224",
     "pinyin": "JINEIYA",
     "name": "Guinée",
-    "locale": "fr",
-    "new_locale": "GN"
+    "locale": "gn"
   },
   {
     "code": "245",
     "pinyin": "JINEIYABISHAO",
     "name": "Guiné-Bissau",
-    "locale": "pt",
-    "new_locale": "GW"
+    "locale": "gw"
   },
   {
     "code": "592",
     "pinyin": "GUIYANEI",
     "name": "Guyana",
-    "locale": "en",
-    "new_locale": "GY"
+    "locale": "gy"
   },
   {
     "code": "509",
     "pinyin": "HAIDI",
     "name": "Haïti",
-    "locale": "",
-    "new_locale": "HT"
+    "locale": "ht"
   },
   {
     "code": "0",
     "pinyin": "HEDEDAOHEMAIKETANGNAQUNDAO",
     "name": "Heard Island and McDonald Islands",
-    "locale": "",
-    "new_locale": "HM"
+    "locale": "hm"
   },
   {
     "code": "379",
     "pinyin": "FANDIGANG",
     "name": "Vaticano",
-    "locale": "it",
-    "new_locale": "VA"
+    "locale": "va"
   },
   {
     "code": "504",
     "pinyin": "HONGDOULASI",
     "name": "Honduras",
-    "locale": "es",
-    "new_locale": "HN"
+    "locale": "hn"
   },
   {
     "code": "852",
     "pinyin": "XIANGGANG",
     "name": "香港",
-    "locale": "zh",
-    "new_locale": "HK"
+    "locale": "zh"
   },
   {
     "code": "36",
     "pinyin": "XIONGYALI",
     "name": "Magyarország",
-    "locale": "hu",
-    "new_locale": "HU"
+    "locale": "hu"
   },
   {
     "code": "354",
     "pinyin": "BINGDAO",
     "name": "Ísland",
-    "locale": "is",
-    "new_locale": "IS"
+    "locale": "is"
   },
   {
     "code": "91",
     "pinyin": "YINDU",
     "name": "भारत",
-    "locale": "hi",
-    "new_locale": "IN"
+    "locale": "in"
   },
   {
     "code": "62",
     "pinyin": "YINNI",
     "name": "Indonesia",
-    "locale": "id",
-    "new_locale": "ID"
+    "locale": "id"
   },
   {
     "code": "98",
     "pinyin": "YILANG",
     "name": "ایران",
-    "locale": "fa",
-    "new_locale": "IR"
+    "locale": "ir"
   },
   {
     "code": "964",
     "pinyin": "YILAKE",
     "name": "العراق",
-    "locale": "ar",
-    "new_locale": "IQ"
+    "locale": "iq"
   },
   {
     "code": "353",
     "pinyin": "AIERLAN",
     "name": "Éire",
-    "locale": "en",
-    "new_locale": "IE"
+    "locale": "ie"
   },
   {
     "code": "44",
     "pinyin": "MAENDAO",
     "name": "Isle of Man",
-    "locale": "en",
-    "new_locale": "IM"
+    "locale": "im"
   },
   {
     "code": "972",
     "pinyin": "YISELIE",
     "name": "ישראל",
-    "locale": "he",
-    "new_locale": "IL"
+    "locale": "il"
   },
   {
     "code": "39",
     "pinyin": "YIDALI",
     "name": "Italia",
-    "locale": "it",
-    "new_locale": "IT"
+    "locale": "it"
   },
   {
     "code": "1876",
     "pinyin": "YAMAIJIA",
     "name": "Jamaica",
-    "locale": "en",
-    "new_locale": "JM"
+    "locale": "jm"
   },
   {
     "code": "81",
     "pinyin": "RIBEN",
     "name": "日本",
-    "locale": "ja",
-    "new_locale": "JP"
+    "locale": "ja"
   },
   {
     "code": "44",
     "pinyin": "ZEXI",
     "name": "Jersey",
-    "locale": "en",
-    "new_locale": "JE"
+    "locale": "je"
   },
   {
     "code": "962",
     "pinyin": "YUEDAN",
     "name": "الأردن",
-    "locale": "ar",
-    "new_locale": "JO"
+    "locale": "jo"
   },
   {
     "code": "7",
     "pinyin": "HASAKESITAN",
     "name": "Қазақстан",
-    "locale": "ru",
-    "new_locale": "KZ"
+    "locale": "kz"
   },
   {
     "code": "254",
     "pinyin": "KENNIYA",
     "name": "Kenya",
-    "locale": "sw",
-    "new_locale": "KE"
+    "locale": "ke"
   },
   {
     "code": "686",
     "pinyin": "JILIBASI",
     "name": "Kiribati",
-    "locale": "en",
-    "new_locale": "KI"
+    "locale": "ki"
   },
   {
     "code": "850",
     "pinyin": "CHAOXIAN",
     "name": "북한",
-    "locale": "ko",
-    "new_locale": "KP"
+    "locale": "kp"
   },
   {
     "code": "82",
     "pinyin": "HANGUO",
     "name": "대한민국",
-    "locale": "ko",
-    "new_locale": "KR"
+    "locale": "ko"
   },
   {
     "code": "383",
     "pinyin": "KESUOWO",
     "name": "Republika e Kosovës",
-    "locale": "sq",
-    "new_locale": "XK"
+    "locale": "xk"
   },
   {
     "code": "965",
     "pinyin": "KEWEITE",
     "name": "الكويت",
-    "locale": "ar",
-    "new_locale": "KW"
+    "locale": "kw"
   },
   {
     "code": "996",
     "pinyin": "JIERJISISITAN",
     "name": "Кыргызстан",
-    "locale": "ky",
-    "new_locale": "KG"
+    "locale": "kg"
   },
   {
     "code": "856",
     "pinyin": "LAOWO",
     "name": "ສປປລາວ",
-    "locale": "lo",
-    "new_locale": "LA"
+    "locale": "la"
   },
   {
     "code": "371",
     "pinyin": "LATUOWEIYA",
     "name": "Latvija",
-    "locale": "lv",
-    "new_locale": "LV"
+    "locale": "lv"
   },
   {
     "code": "961",
     "pinyin": "LIBANEN",
     "name": "لبنان",
-    "locale": "ar",
-    "new_locale": "LB"
+    "locale": "lb"
   },
   {
     "code": "266",
     "pinyin": "LAISUOTUO",
     "name": "Lesotho",
-    "locale": "st",
-    "new_locale": "LS"
+    "locale": "ls"
   },
   {
     "code": "231",
     "pinyin": "LIBILIYA",
     "name": "Liberia",
-    "locale": "en",
-    "new_locale": "LR"
+    "locale": "lr"
   },
   {
     "code": "218",
     "pinyin": "LIBIYA",
     "name": "‏ليبيا",
-    "locale": "ar",
-    "new_locale": "LY"
+    "locale": "ly"
   },
   {
     "code": "423",
     "pinyin": "LIEZHIDUNSHIDENG",
     "name": "Liechtenstein",
-    "locale": "de",
-    "new_locale": "LI"
+    "locale": "li"
   },
   {
     "code": "370",
     "pinyin": "LITAOWAN",
     "name": "Lietuva",
-    "locale": "lt",
-    "new_locale": "LT"
+    "locale": "lt"
   },
   {
     "code": "352",
     "pinyin": "LUSENBAO",
     "name": "Luxembourg",
-    "locale": "fr",
-    "new_locale": "LU"
+    "locale": "lu"
   },
   {
     "code": "853",
     "pinyin": "AOMEN",
     "name": "澳門",
-    "locale": "zh",
-    "new_locale": "MO"
+    "locale": "mo"
   },
   {
     "code": "389",
     "pinyin": "BEIMAQIDUN",
     "name": "Македонија",
-    "locale": "mk",
-    "new_locale": "MK"
+    "locale": "mk"
   },
   {
     "code": "261",
     "pinyin": "MADAJIASIJIA",
     "name": "Madagasikara",
-    "locale": "mg",
-    "new_locale": "MG"
+    "locale": "mg"
   },
   {
     "code": "265",
     "pinyin": "MALAWEI",
     "name": "Malawi",
-    "locale": "en",
-    "new_locale": "MW"
+    "locale": "mw"
   },
   {
     "code": "60",
     "pinyin": "MALAIXIYA",
     "name": "Malaysia",
-    "locale": "ms",
-    "new_locale": "MY"
+    "locale": "my"
   },
   {
     "code": "960",
     "pinyin": "MAERDAIFU",
     "name": "Maldives",
-    "locale": "dv",
-    "new_locale": "MV"
+    "locale": "mv"
   },
   {
     "code": "223",
     "pinyin": "MALI",
     "name": "Mali",
-    "locale": "bm",
-    "new_locale": "ML"
+    "locale": "ml"
   },
   {
     "code": "356",
     "pinyin": "MAERTA",
     "name": "Malta",
-    "locale": "mt",
-    "new_locale": "MT"
+    "locale": "mt"
   },
   {
     "code": "692",
     "pinyin": "MASHAOERQUNDAO",
     "name": "M̧ajeļ",
-    "locale": "en",
-    "new_locale": "MH"
+    "locale": "mh"
   },
   {
     "code": "596",
     "pinyin": "MATINIKE",
     "name": "Martinique",
-    "locale": "fr",
-    "new_locale": "MQ"
+    "locale": "mq"
   },
   {
     "code": "222",
     "pinyin": "MAOLITANIYA",
     "name": "موريتانيا",
-    "locale": "ar",
-    "new_locale": "MR"
+    "locale": "mr"
   },
   {
     "code": "230",
     "pinyin": "MAOLIQIUSI",
     "name": "Maurice",
-    "locale": "mfe",
-    "new_locale": "MU"
+    "locale": "mu"
   },
   {
     "code": "262",
     "pinyin": "MAYUETE",
     "name": "Mayotte",
-    "locale": "fr",
-    "new_locale": "YT"
+    "locale": "yt"
   },
   {
     "code": "52",
     "pinyin": "MOXIGE",
     "name": "México",
-    "locale": "es",
-    "new_locale": "MX"
+    "locale": "mx"
   },
   {
     "code": "691",
     "pinyin": "MIKELUONIXIYALIANBANG",
     "name": "Micronesia",
-    "locale": "en",
-    "new_locale": "FM"
+    "locale": "fm"
   },
   {
     "code": "373",
     "pinyin": "MOERDUOWA",
     "name": "Moldova",
-    "locale": "ro",
-    "new_locale": "MD"
+    "locale": "md"
   },
   {
     "code": "377",
     "pinyin": "MONAGE",
     "name": "Monaco",
-    "locale": "fr",
-    "new_locale": "MC"
+    "locale": "mc"
   },
   {
     "code": "976",
     "pinyin": "MENGGU",
     "name": "Монгол улс",
-    "locale": "mn",
-    "new_locale": "MN"
+    "locale": "mn"
   },
   {
     "code": "382",
     "pinyin": "HEISHAN",
     "name": "Црна Гора",
-    "locale": "sr",
-    "new_locale": "ME"
+    "locale": "me"
   },
   {
     "code": "1664",
     "pinyin": "MENGTESAILATE",
     "name": "Montserrat",
-    "locale": "en",
-    "new_locale": "MS"
+    "locale": "ms"
   },
   {
     "code": "212",
     "pinyin": "MOLUOGE",
     "name": "المغرب",
-    "locale": "ar",
-    "new_locale": "MA"
+    "locale": "ma"
   },
   {
     "code": "258",
     "pinyin": "MOSANGBIKE",
     "name": "Moçambique",
-    "locale": "pt",
-    "new_locale": "MZ"
+    "locale": "mz"
   },
   {
     "code": "95",
     "pinyin": "MIANDIAN",
     "name": "Myanmar",
-    "locale": "my",
-    "new_locale": "MM"
+    "locale": "mm"
   },
   {
     "code": "264",
     "pinyin": "NAMIBIYA",
     "name": "Namibia",
-    "locale": "af",
-    "new_locale": "NA"
+    "locale": "na"
   },
   {
     "code": "674",
     "pinyin": "NAOLU",
     "name": "Nauru",
-    "locale": "en",
-    "new_locale": "NR"
+    "locale": "nr"
   },
   {
     "code": "977",
     "pinyin": "NIBOER",
     "name": "नेपाल",
-    "locale": "ne",
-    "new_locale": "NP"
+    "locale": "np"
   },
   {
     "code": "31",
     "pinyin": "HELAN",
     "name": "Nederland",
-    "locale": "nl",
-    "new_locale": "NL"
+    "locale": "nl"
   },
   {
     "code": "687",
     "pinyin": "XINKALIDUONIYA",
     "name": "Nouvelle-Calédonie",
-    "locale": "fr",
-    "new_locale": "NC"
+    "locale": "nc"
   },
   {
     "code": "64",
     "pinyin": "XINXILAN",
     "name": "New Zealand",
-    "locale": "en",
-    "new_locale": "NZ"
+    "locale": "nz"
   },
   {
     "code": "505",
     "pinyin": "NIJIALAGUA",
     "name": "Nicaragua",
-    "locale": "es",
-    "new_locale": "NI"
+    "locale": "ni"
   },
   {
     "code": "227",
     "pinyin": "NIRIER",
     "name": "Niger",
-    "locale": "ha",
-    "new_locale": "NE"
+    "locale": "ne"
   },
   {
     "code": "234",
     "pinyin": "NIRILIYA",
     "name": "Nigeria",
-    "locale": "en",
-    "new_locale": "NG"
+    "locale": "ng"
   },
   {
     "code": "683",
     "pinyin": "NIUAI",
     "name": "Niuē",
-    "locale": "en",
-    "new_locale": "NU"
+    "locale": "nu"
   },
   {
     "code": "672",
     "pinyin": "NUOFUKEDAO",
     "name": "Norfolk Island",
-    "locale": "en",
-    "new_locale": "NF"
+    "locale": "nf"
   },
   {
     "code": "1670",
     "pinyin": "BEIMALIYANAQUNDAO",
     "name": "Northern Mariana Islands",
-    "locale": "en",
-    "new_locale": "MP"
+    "locale": "mp"
   },
   {
     "code": "47",
     "pinyin": "NUOWEI",
     "name": "Norge",
-    "locale": "nb",
-    "new_locale": "NO"
+    "locale": "no"
   },
   {
     "code": "968",
     "pinyin": "AMAN",
     "name": "عمان",
-    "locale": "ar",
-    "new_locale": "OM"
+    "locale": "om"
   },
   {
     "code": "92",
     "pinyin": "BAJISITAN",
     "name": "Pakistan",
-    "locale": "ur",
-    "new_locale": "PK"
+    "locale": "pk"
   },
   {
     "code": "680",
     "pinyin": "PALAO",
     "name": "Palau",
-    "locale": "en",
-    "new_locale": "PW"
+    "locale": "pw"
   },
   {
     "code": "970",
     "pinyin": "BALESITAN",
     "name": "فلسطين",
-    "locale": "ar",
-    "new_locale": "PS"
+    "locale": "ps"
   },
   {
     "code": "507",
     "pinyin": "BANAMA",
     "name": "Panamá",
-    "locale": "es",
-    "new_locale": "PA"
+    "locale": "pa"
   },
   {
     "code": "675",
     "pinyin": "BABUYAXINJINEIYA",
     "name": "Papua Niugini",
-    "locale": "tpi",
-    "new_locale": "PG"
+    "locale": "pg"
   },
   {
     "code": "595",
     "pinyin": "BALAGUI",
     "name": "Paraguay",
-    "locale": "gn",
-    "new_locale": "PY"
+    "locale": "py"
   },
   {
     "code": "51",
     "pinyin": "MILU",
     "name": "Perú",
-    "locale": "es",
-    "new_locale": "PE"
+    "locale": "pe"
   },
   {
     "code": "63",
     "pinyin": "FEILVBIN",
     "name": "Pilipinas",
-    "locale": "fil",
-    "new_locale": "PH"
+    "locale": "ph"
   },
   {
     "code": "64",
     "pinyin": "PITEKAIENQUNDAO",
     "name": "Pitcairn Islands",
-    "locale": "en",
-    "new_locale": "PN"
+    "locale": "pn"
   },
   {
     "code": "48",
     "pinyin": "BOLAN",
     "name": "Polska",
-    "locale": "pl",
-    "new_locale": "PL"
+    "locale": "pl"
   },
   {
     "code": "351",
     "pinyin": "PUTAOYA",
     "name": "Portugal",
-    "locale": "pt",
-    "new_locale": "PT"
+    "locale": "pt"
   },
   {
     "code": "1939",
     "pinyin": "BODUOLIGE",
     "name": "Puerto Rico",
-    "locale": "es",
-    "new_locale": "PR"
+    "locale": "pr"
   },
   {
     "code": "1787",
     "pinyin": "BODUOLIGE",
     "name": "Puerto Rico",
-    "locale": "es",
-    "new_locale": "PR"
+    "locale": "pr"
   },
   {
     "code": "974",
     "pinyin": "KATAER",
     "name": "قطر",
-    "locale": "ar",
-    "new_locale": "QA"
+    "locale": "qa"
   },
   {
     "code": "40",
     "pinyin": "LUOMANIYA",
     "name": "România",
-    "locale": "ro",
-    "new_locale": "RO"
+    "locale": "ro"
   },
   {
     "code": "7",
     "pinyin": "ELUOSI",
     "name": "Россия",
-    "locale": "ru",
-    "new_locale": "RU"
+    "locale": "ru"
   },
   {
     "code": "250",
     "pinyin": "LUWANGDA",
     "name": "Rwanda",
-    "locale": "rw",
-    "new_locale": "RW"
+    "locale": "rw"
   },
   {
     "code": "262",
     "pinyin": "LIUNIWANG",
     "name": "La Réunion",
-    "locale": "fr",
-    "new_locale": "RE"
+    "locale": "re"
   },
   {
     "code": "590",
     "pinyin": "SHENGBATAILEMI",
     "name": "Saint-Barthélemy",
-    "locale": "fr",
-    "new_locale": "BL"
+    "locale": "bl"
   },
   {
     "code": "290",
     "pinyin": "SHENGHELENA、ASENSONGHETELISITAN-DAKUNIYA",
     "name": "Saint Helena",
-    "locale": "en",
-    "new_locale": "SH"
+    "locale": "sh"
   },
   {
     "code": "1869",
     "pinyin": "SHENGJICIHENIWEISI",
     "name": "Saint Kitts and Nevis",
-    "locale": "en",
-    "new_locale": "KN"
+    "locale": "kn"
   },
   {
     "code": "1758",
     "pinyin": "SHENGLUXIYA",
     "name": "Saint Lucia",
-    "locale": "en",
-    "new_locale": "LC"
+    "locale": "lc"
   },
   {
     "code": "590",
     "pinyin": "FASHUSHENGMADING",
     "name": "Saint-Martin",
-    "locale": "fr",
-    "new_locale": "MF"
+    "locale": "mf"
   },
   {
     "code": "508",
     "pinyin": "SHENGPIAIERHEMIKELONG",
     "name": "Saint-Pierre-et-Miquelon",
-    "locale": "fr",
-    "new_locale": "PM"
+    "locale": "pm"
   },
   {
     "code": "1784",
     "pinyin": "SHENGWENSENTEHEGELINNADINGSI",
     "name": "Saint Vincent and the Grenadines",
-    "locale": "en",
-    "new_locale": "VC"
+    "locale": "vc"
   },
   {
     "code": "685",
     "pinyin": "SAMOYA",
     "name": "Samoa",
-    "locale": "en",
-    "new_locale": "WS"
+    "locale": "ws"
   },
   {
     "code": "378",
     "pinyin": "SHENGMALINUO",
     "name": "San Marino",
-    "locale": "it",
-    "new_locale": "SM"
+    "locale": "sm"
   },
   {
     "code": "239",
     "pinyin": "SHENGDUOMEIHEPULINXIBI",
     "name": "São Tomé e Príncipe",
-    "locale": "pt",
-    "new_locale": "ST"
+    "locale": "st"
   },
   {
     "code": "966",
     "pinyin": "SHATEALABO",
     "name": "العربية السعودية",
-    "locale": "ar",
-    "new_locale": "SA"
+    "locale": "sa"
   },
   {
     "code": "221",
     "pinyin": "SAINEIJIAER",
     "name": "Sénégal",
-    "locale": "fr",
-    "new_locale": "SN"
+    "locale": "sn"
   },
   {
     "code": "381",
     "pinyin": "SAIERWEIYA",
     "name": "Србија",
-    "locale": "sr",
-    "new_locale": "RS"
+    "locale": "rs"
   },
   {
     "code": "248",
     "pinyin": "SAISHEER",
     "name": "Seychelles",
-    "locale": "fr",
-    "new_locale": "SC"
+    "locale": "sc"
   },
   {
     "code": "232",
     "pinyin": "SAILALIANG",
     "name": "Sierra Leone",
-    "locale": "en",
-    "new_locale": "SL"
+    "locale": "sl"
   },
   {
     "code": "65",
     "pinyin": "XINJIAPO",
     "name": "Singapore",
-    "locale": "en",
-    "new_locale": "SG"
+    "locale": "sg"
   },
   {
     "code": "421",
     "pinyin": "SILUOFAKE",
     "name": "Slovensko",
-    "locale": "sk",
-    "new_locale": "SK"
+    "locale": "sk"
   },
   {
     "code": "386",
     "pinyin": "SILUOWENNIYA",
     "name": "Slovenija",
-    "locale": "sl",
-    "new_locale": "SI"
+    "locale": "si"
   },
   {
     "code": "677",
     "pinyin": "SUOLUOMENQUNDAO",
     "name": "Solomon Islands",
-    "locale": "en",
-    "new_locale": "SB"
+    "locale": "sb"
   },
   {
     "code": "252",
     "pinyin": "SUOMALI",
     "name": "Soomaaliya",
-    "locale": "so",
-    "new_locale": "SO"
+    "locale": "so"
   },
   {
     "code": "27",
     "pinyin": "NANFEI",
     "name": "South Africa",
-    "locale": "en",
-    "new_locale": "ZA"
+    "locale": "za"
   },
   {
     "code": "211",
     "pinyin": "NANSUDAN",
     "name": "South Sudan",
-    "locale": "ar",
-    "new_locale": "SS"
+    "locale": "ss"
   },
   {
     "code": "500",
     "pinyin": "NANQIAOZHIYAHENANSANGWEIQIQUNDAO",
     "name": "South Georgia",
-    "locale": "",
-    "new_locale": "GS"
+    "locale": "gs"
   },
   {
     "code": "34",
     "pinyin": "XIBANYA",
     "name": "España",
-    "locale": "es",
-    "new_locale": "ES"
+    "locale": "es"
   },
   {
     "code": "94",
     "pinyin": "SILILANKA",
     "name": "Sri Lanka",
-    "locale": "si",
-    "new_locale": "LK"
+    "locale": "lk"
   },
   {
     "code": "249",
     "pinyin": "SUDAN",
     "name": "السودان",
-    "locale": "ar",
-    "new_locale": "SD"
+    "locale": "sd"
   },
   {
     "code": "597",
     "pinyin": "SULINAN",
     "name": "Suriname",
-    "locale": "nl",
-    "new_locale": "SR"
+    "locale": "sr"
   },
   {
     "code": "47",
     "pinyin": "SIWAERBAHEYANGMAYAN",
     "name": "Svalbard og Jan Mayen",
-    "locale": "nb",
-    "new_locale": "SJ"
+    "locale": "sj"
   },
   {
     "code": "268",
     "pinyin": "SIWEISHILAN",
     "name": "Swaziland",
-    "locale": "en",
-    "new_locale": "SZ"
+    "locale": "sz"
   },
   {
     "code": "46",
     "pinyin": "RUIDIAN",
     "name": "Sverige",
-    "locale": "sv",
-    "new_locale": "SE"
+    "locale": "sv"
   },
   {
     "code": "41",
     "pinyin": "RUISHI",
     "name": "Schweiz",
-    "locale": "de",
-    "new_locale": "CH"
+    "locale": "ch"
   },
   {
     "code": "963",
     "pinyin": "XULIYA",
     "name": "سوريا",
-    "locale": "ar",
-    "new_locale": "SY"
+    "locale": "sy"
   },
   {
     "code": "886",
     "pinyin": "ZHONGGUOTAIWANSHENG",
     "name": "臺灣",
-    "locale": "zh",
-    "new_locale": "TW"
-  },
-  {
-    "code": "992",
-    "pinyin": "TAJIKESITAN",
-    "name": "Тоҷикистон",
-    "locale": "tg",
-    "new_locale": "TJ"
+    "locale": "zh"
   },
   {
     "code": "255",
     "pinyin": "TANSANGNIYA",
     "name": "Tanzania",
-    "locale": "sw",
-    "new_locale": "TZ"
+    "locale": "tz"
   },
   {
     "code": "66",
     "pinyin": "TAIGUO",
     "name": "ประเทศไทย",
-    "locale": "th",
-    "new_locale": "TH"
+    "locale": "th"
   },
   {
     "code": "670",
     "pinyin": "DONGDIWEN",
     "name": "Timor-Leste",
-    "locale": "pt",
-    "new_locale": "TL"
+    "locale": "tl"
   },
   {
     "code": "228",
     "pinyin": "DUOGE",
     "name": "Togo",
-    "locale": "fr",
-    "new_locale": "TG"
+    "locale": "tg"
   },
   {
     "code": "690",
     "pinyin": "TUOKELAO",
     "name": "Tokelau",
-    "locale": "en",
-    "new_locale": "TK"
+    "locale": "tk"
   },
   {
     "code": "676",
     "pinyin": "TANGJIA",
     "name": "Tonga",
-    "locale": "to",
-    "new_locale": "TO"
+    "locale": "to"
   },
   {
     "code": "1868",
     "pinyin": "TELINIDAHEDUOBAGE",
     "name": "Trinidad and Tobago",
-    "locale": "en",
-    "new_locale": "TT"
+    "locale": "tt"
   },
   {
     "code": "216",
     "pinyin": "TUNISI",
     "name": "تونس",
-    "locale": "ar",
-    "new_locale": "TN"
+    "locale": "tn"
   },
   {
     "code": "90",
     "pinyin": "TUERQI",
     "name": "Türkiye",
-    "locale": "tr",
-    "new_locale": "TR"
+    "locale": "tr"
   },
   {
     "code": "993",
     "pinyin": "TUKUMANSITAN",
     "name": "Türkmenistan",
-    "locale": "tk",
-    "new_locale": "TM"
+    "locale": "tm"
   },
   {
     "code": "1649",
     "pinyin": "TEKESIHEKAIKESIQUNDAO",
     "name": "Turks and Caicos Islands",
-    "locale": "en",
-    "new_locale": "TC"
+    "locale": "tc"
   },
   {
     "code": "688",
     "pinyin": "TUWALU",
     "name": "Tuvalu",
-    "locale": "en",
-    "new_locale": "TV"
+    "locale": "tv"
   },
   {
     "code": "256",
     "pinyin": "WUGANDA",
     "name": "Uganda",
-    "locale": "sw",
-    "new_locale": "UG"
+    "locale": "ug"
   },
   {
     "code": "380",
     "pinyin": "WUKELAN",
     "name": "Україна",
-    "locale": "uk",
-    "new_locale": "UA"
+    "locale": "ua"
   },
   {
     "code": "971",
     "pinyin": "ALIANQIU",
     "name": "دولة الإمارات العربية المتحدة",
-    "locale": "ar",
-    "new_locale": "AE"
+    "locale": "ae"
   },
   {
     "code": "44",
     "pinyin": "YINGGUO",
     "name": "United Kingdom",
-    "locale": "en",
-    "new_locale": "GB"
+    "locale": "en"
   },
   {
     "code": "1",
     "pinyin": "MEIGUO",
     "name": "United States",
-    "locale": "en",
-    "new_locale": "US"
+    "locale": "en"
   },
   {
     "code": "598",
     "pinyin": "WULAGUI",
     "name": "Uruguay",
-    "locale": "es",
-    "new_locale": "UY"
+    "locale": "uy"
   },
   {
     "code": "998",
     "pinyin": "WUZIBIEKESITAN",
     "name": "O‘zbekiston",
-    "locale": "uz",
-    "new_locale": "UZ"
+    "locale": "uz"
   },
   {
     "code": "678",
     "pinyin": "WANUATU",
     "name": "Vanuatu",
-    "locale": "en",
-    "new_locale": "VU"
+    "locale": "vu"
   },
   {
     "code": "58",
     "pinyin": "WEINEIRUILA",
     "name": "Venezuela",
-    "locale": "es",
-    "new_locale": "VE"
+    "locale": "ve"
   },
   {
     "code": "84",
     "pinyin": "YUENAN",
     "name": "Việt Nam",
-    "locale": "vi",
-    "new_locale": "VN"
+    "locale": "vi"
   },
   {
     "code": "1284",
     "pinyin": "YINGSHUWEIERJINGQUNDAO",
     "name": "British Virgin Islands",
-    "locale": "en",
-    "new_locale": "VG"
+    "locale": "vg"
   },
   {
     "code": "1340",
     "pinyin": "MEISHUWEIERJINGQUNDAO",
     "name": "United States Virgin Islands",
-    "locale": "en",
-    "new_locale": "VI"
+    "locale": "vi"
   },
   {
     "code": "681",
     "pinyin": "WALISIHEFUTUNA",
     "name": "Wallis et Futuna",
-    "locale": "fr",
-    "new_locale": "WF"
+    "locale": "wf"
   },
   {
     "code": "967",
     "pinyin": "YEMEN",
     "name": "اليَمَن",
-    "locale": "ar",
-    "new_locale": "YE"
+    "locale": "ye"
   },
   {
     "code": "260",
     "pinyin": "ZANBIYA",
     "name": "Zambia",
-    "locale": "bem",
-    "new_locale": "ZM"
+    "locale": "zm"
   },
   {
     "code": "263",
     "pinyin": "JINBABUWEI",
     "name": "Zimbabwe",
-    "locale": "sn",
-    "new_locale": "ZW"
+    "locale": "zw"
   }
 ]

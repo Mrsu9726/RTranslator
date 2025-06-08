@@ -150,6 +150,11 @@ public class UserDataFragment extends Fragment {
                 }
             }
         });
+        //直接跳转
+        global.setName(inputName.getText().toString());
+        //save image
+        userImageContainer.saveImage();
+        activity.startFragment(AccessActivity.DOWNLOAD_FRAGMENT, null);
     }
 
     private void showAgeTermsError() {

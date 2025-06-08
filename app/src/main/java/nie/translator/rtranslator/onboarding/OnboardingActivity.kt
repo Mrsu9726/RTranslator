@@ -51,7 +51,7 @@ class OnboardingActivity : FragmentActivity() {
 
             override fun onFailure(reasons: IntArray?, value: Long) {
                 LogUtils.d("OnboardingActivity", "onFailure: $value")
-                languageAdapter?.setSelectLocal("CN")
+                languageAdapter?.setSelectLocal("zh")
             }
         })
         languageAdapter?.setCallback(object : PickCallback {

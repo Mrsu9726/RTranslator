@@ -16,6 +16,7 @@
     *-->
 
 <resources>
+    <color name="cornflower_blue">#6274e2</color>
     <color name="primary">#43a047</color>
     <color name="primary_dark">#388e3c</color>
     <color name="primary_very_dark">#296B2C</color>

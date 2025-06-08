@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -45,9 +47,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ShellUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.lxj.xpopup.XPopup;
+import com.translate.download.ApkCopyCallback;
+import com.translate.download.ModelCopyCallback;
+import com.translate.download.UsbModelCopyService;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import nie.translator.rtranslator.GeneralActivity;
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
@@ -56,9 +68,11 @@ import nie.translator.rtranslator.settings.SettingsActivity;
 import nie.translator.rtranslator.standby.StandbyManager;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.CustomServiceConnection;
+import nie.translator.rtranslator.tools.ThreadUtils;
 import nie.translator.rtranslator.tools.Tools;
 import nie.translator.rtranslator.tools.gui.peers.GuiPeer;
 import nie.translator.rtranslator.tools.services_communication.ServiceCommunicatorListener;
+import nie.translator.rtranslator.view.ProgressPopupView;
 import nie.translator.rtranslator.voice_translation._conversation_mode.PairingFragment;
 import nie.translator.rtranslator.voice_translation._conversation_mode._conversation.ConversationFragment;
 import nie.translator.rtranslator.voice_translation._conversation_mode._conversation.ConversationService;
@@ -113,7 +127,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
                     Manifest.permission.BLUETOOTH_ADMIN,
                     Manifest.permission.ACCESS_FINE_LOCATION,
             };
-        }else{
+        } else {
             REQUIRED_PERMISSIONS = new String[]{
                     Manifest.permission.BLUETOOTH_ADVERTISE,
                     Manifest.permission.BLUETOOTH_SCAN,
@@ -150,7 +164,68 @@ public class VoiceTranslationActivity extends GeneralActivity {
             public void run() {
                 StandbyManager.INSTANCE.start(VoiceTranslationActivity.this.getApplication());
             }
-        },1000);
+        }, 1000);
+
+        UsbModelCopyService.INSTANCE.registerApkReceiver(this, new ApkCopyCallback() {
+            @Override
+            public void onStart(int totalFiles) {
+                LogUtils.d("apk 开始");
+            }
+
+            @Override
+            public void onProgress(int current, int total, @NotNull String filename, double speedMbps) {
+                ThreadUtils.getInstance().executeMain(new Runnable() {
+                    @Override
+                    public void run() {
+                        showProgressPopup();
+                        int percentage = 0;
+                        if (total > 0) {
+                            percentage = current * 100 / total;
+                        }
+                        if (progressPopup != null)
+                            progressPopup.setProgress(percentage);
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess() {
+                if (progressPopup != null)
+                    progressPopup.dismiss();
+                LogUtils.d("apk 成功");
+                ToastUtils.showShort("正在安装");
+                String targetDir = new File(Environment.getExternalStorageDirectory(), UsbModelCopyService.INSTANCE.getTARGET_APK_DIR()).getAbsolutePath();
+                //安装apk
+                ShellUtils.execCmd("adb install -r " + targetDir + File.separator + UsbModelCopyService.INSTANCE.getAPK_NAME(), true);
+            }
+
+            @Override
+            public void onFailure(@NotNull String error) {
+                LogUtils.e("apk 失败：" + error);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtils.e("apk 取消");
+            }
+        });
+    }
+
+    ProgressPopupView progressPopup;
+
+    private void showProgressPopup() {
+        if (progressPopup == null) {
+            // 创建弹窗
+            progressPopup = new ProgressPopupView(this);
+            progressPopup.setTitle("正在拷贝...");
+
+            // 显示弹窗
+            new XPopup.Builder(this)
+                    .dismissOnBackPressed(false)
+                    .dismissOnTouchOutside(false)
+                    .asCustom(progressPopup)
+                    .show();
+        }
     }
 
     @Override
@@ -159,7 +234,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
         // when we return to the app's gui based on the service that was saved in the last closure we choose which fragment to start
         SharedPreferences sharedPreferences = this.getSharedPreferences("default", Context.MODE_PRIVATE);
         setFragment(sharedPreferences.getInt("fragment", DEFAULT_FRAGMENT));
-        if(getResources() != null) {
+        if (getResources() != null) {
             config = getResources().getConfiguration();
         }
     }
@@ -199,7 +274,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 if (getCurrentFragment() != PAIRING_FRAGMENT) {
                     if (Tools.hasPermissions(this, REQUIRED_PERMISSIONS)) {
                         global.initializeBluetoothCommunicator();
-                        if(global.getBluetoothCommunicator() != null && global.getBluetoothCommunicator().isBluetoothLeSupported()){
+                        if (global.getBluetoothCommunicator() != null && global.getBluetoothCommunicator().isBluetoothLeSupported()) {
                             PairingFragment paringFragment = new PairingFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             Bundle bundle = new Bundle();
@@ -210,9 +285,9 @@ public class VoiceTranslationActivity extends GeneralActivity {
                             currentFragment = PAIRING_FRAGMENT;
                             saveFragment();
                             //fragment=paringFragment;
-                        }else if(global.getBluetoothCommunicator().isBluetoothLeSupported()){
+                        } else if (global.getBluetoothCommunicator().isBluetoothLeSupported()) {
                             Toast.makeText(global, "Error with Bluetooth, please restart the app", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(global, R.string.error_missing_bluetooth_le, Toast.LENGTH_LONG).show();
                         }
                     } else {
@@ -236,7 +311,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
                     currentFragment = CONVERSATION_FRAGMENT;
                     saveFragment();
                     //fragment= conversationFragment;
-                }else if(global.getBluetoothCommunicator() == null){
+                } else if (global.getBluetoothCommunicator() == null) {
                     setFragment(DEFAULT_FRAGMENT);
                 }
                 break;
@@ -258,7 +333,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 }
                 break;
             }
-            case TRANSLATION_FRAGMENT:{
+            case TRANSLATION_FRAGMENT: {
                 // possible stop of the Conversation and WalkieTalkie Service
                 stopConversationService();
                 stopWalkieTalkieService();
@@ -323,78 +398,78 @@ public class VoiceTranslationActivity extends GeneralActivity {
         if (currentFragment == TRANSLATION_FRAGMENT || currentFragment == CONVERSATION_FRAGMENT) {
             /* We recreate the activity only for TRANSLATION_FRAGMENT and CONVERSATION_FRAGMENT because if we do not do this,
             the keyboard sometimes not go in full screen when the screen has too little space */
-            if(config == null) {
+            if (config == null) {
                 recreate();
-            }else if(config.orientation != newConfig.orientation){
+            } else if (config.orientation != newConfig.orientation) {
                 recreate();
             }
         }
-        if(getResources() != null) {
+        if (getResources() != null) {
             config = getResources().getConfiguration();
         }
     }
 
     public int startSearch() {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             return global.getBluetoothCommunicator().startSearch();
-        }else{
+        } else {
             return BluetoothCommunicator.ERROR;
         }
     }
 
     public int stopSearch(boolean tryRestoreBluetoothStatus) {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             return global.getBluetoothCommunicator().stopSearch(tryRestoreBluetoothStatus);
-        }else{
+        } else {
             return BluetoothCommunicator.ERROR;
         }
     }
 
     public boolean isSearching() {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             return global.getBluetoothCommunicator().isSearching();
-        }else{
+        } else {
             return false;
         }
     }
 
     public void connect(Peer peer) {
         stopSearch(false);
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().connect(peer);
         }
     }
 
     public void acceptConnection(Peer peer) {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().acceptConnection(peer);
         }
     }
 
     public void rejectConnection(Peer peer) {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().rejectConnection(peer);
         }
     }
 
     public ArrayList<GuiPeer> getConnectedPeersList() {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             return global.getBluetoothCommunicator().getConnectedPeersList();
-        }else{
+        } else {
             return new ArrayList<GuiPeer>();
         }
     }
 
     public ArrayList<Peer> getConnectingPeersList() {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             return global.getBluetoothCommunicator().getConnectingPeers();
-        }else{
+        } else {
             return new ArrayList<Peer>();
         }
     }
 
     public void disconnect(Peer peer) {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().disconnect(peer);
         }
     }
@@ -429,7 +504,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
             }
         }
         //bluetooth permissions are granted
-        if(startingPairing) {
+        if (startingPairing) {
             startingPairing = false;
             setFragment(PAIRING_FRAGMENT);
         }
@@ -472,7 +547,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 setFragment(DEFAULT_FRAGMENT);
             } else if (fragment instanceof PairingFragment) {
                 setFragment(DEFAULT_FRAGMENT);
-            }else{
+            } else {
                 super.onBackPressed();
             }
         } else {
@@ -483,9 +558,9 @@ public class VoiceTranslationActivity extends GeneralActivity {
     public void exitFromVoiceTranslation() {
         if (getConnectedPeersList().size() > 0 && global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().disconnectFromAll();
-        } else if(global.getBluetoothCommunicator() != null){
+        } else if (global.getBluetoothCommunicator() != null) {
             setFragment(VoiceTranslationActivity.PAIRING_FRAGMENT);
-        }else {  //if global.getBluetoothCommunicator() == null
+        } else {  //if global.getBluetoothCommunicator() == null
             setFragment(VoiceTranslationActivity.DEFAULT_FRAGMENT);
         }
     }
@@ -498,9 +573,9 @@ public class VoiceTranslationActivity extends GeneralActivity {
         global.getLanguage(false, new Global.GetLocaleListener() {
             @Override
             public void onSuccess(CustomLocale result) {
-                if(NotificationManagerCompat.from(VoiceTranslationActivity.this).areNotificationsEnabled()) {
+                if (NotificationManagerCompat.from(VoiceTranslationActivity.this).areNotificationsEnabled()) {
                     intent.putExtra("notification", notification);
-                }else{
+                } else {
                     //Toast.makeText(VoiceTranslationActivity.this, getResources().getString(R.string.toast_missing_notification_permission), Toast.LENGTH_LONG).show();
                 }
                 startService(intent);
@@ -526,9 +601,9 @@ public class VoiceTranslationActivity extends GeneralActivity {
                     @Override
                     public void onSuccess(CustomLocale result) {
                         intent.putExtra("secondLanguage", result);
-                        if(NotificationManagerCompat.from(VoiceTranslationActivity.this).areNotificationsEnabled()) {
+                        if (NotificationManagerCompat.from(VoiceTranslationActivity.this).areNotificationsEnabled()) {
                             intent.putExtra("notification", notification);
-                        }else{
+                        } else {
                             //Toast.makeText(VoiceTranslationActivity.this, getResources().getString(R.string.toast_missing_notification_permission), Toast.LENGTH_LONG).show();
                         }
                         startService(intent);
@@ -660,14 +735,14 @@ public class VoiceTranslationActivity extends GeneralActivity {
 
     public void addCallback(Callback callback) {
         // in this way the listener will listen to both this activity and the communicator
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().addCallback(callback);
         }
         clientsCallbacks.add(callback);
     }
 
     public void removeCallback(Callback callback) {
-        if(global.getBluetoothCommunicator() != null) {
+        if (global.getBluetoothCommunicator() != null) {
             global.getBluetoothCommunicator().removeCallback(callback);
         }
         clientsCallbacks.remove(callback);

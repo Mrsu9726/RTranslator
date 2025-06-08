@@ -29,6 +29,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,6 +60,7 @@ public class NoticeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LogUtils.i("NoticeFragment", "onViewCreated");
         noticeDescription = view.findViewById(R.id.noticeDescription);
         buttonConfirm = view.findViewById(R.id.buttonConfirm);
         ramErrorText = view.findViewById(R.id.ramErrorText);
@@ -101,5 +104,11 @@ public class NoticeFragment extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtils.i("NoticeFragment", "onPause");
     }
 }

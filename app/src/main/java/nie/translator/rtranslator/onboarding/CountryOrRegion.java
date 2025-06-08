@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,9 +102,13 @@ public class CountryOrRegion implements PyEntity {
             int flag = 0;
             String translate = "";
             String locale = jo.getString("locale");
-            if(!TextUtils.isEmpty(locale)) {
-                flag = ctx.getResources().getIdentifier("flag_" + locale.toLowerCase(), "drawable", ctx.getPackageName());
-                translate = ctx.getString(ctx.getResources().getIdentifier("name_" + locale.toLowerCase(), "string", ctx.getPackageName()));
+            try {
+                if(!TextUtils.isEmpty(locale)) {
+                    flag = ctx.getResources().getIdentifier("flag_" + locale.toLowerCase(), "drawable", ctx.getPackageName());
+                    translate = ctx.getString(ctx.getResources().getIdentifier("name_" + locale.toLowerCase(), "string", ctx.getPackageName()));
+                }
+            }catch (Exception e){
+                LogUtils.e("词条找不到：" + locale);
             }
             String name = translate;
             Locale defaultLoc = Locale.getDefault();

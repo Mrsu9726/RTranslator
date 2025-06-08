@@ -60,6 +60,9 @@ public class LoadingActivity extends GeneralActivity {
     private int delay_seconds = 30;
 
     private ImageView loadingImage;
+
+    private boolean testUSBCopy = false;
+
     public LoadingActivity() {
         // Required empty public constructor
     }
@@ -93,12 +96,25 @@ public class LoadingActivity extends GeneralActivity {
         loadingImage = findViewById(R.id.loading_iv);
         Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_loading);
         loadingImage.startAnimation(rotateAnimation);
+        if (testUSBCopy) {
+            final SharedPreferences sharedPreferences = getSharedPreferences("default", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor;
+            editor = sharedPreferences.edit();
+            //假设已经拷贝了模型
+            editor.putString("name", "syntalk");
+            editor.putLong("currentDownloadId", -1);
+            editor.apply();
+        }
+
     }
 
     public void onResume() {
         super.onResume();
         isVisible = true;
         global = (Global) getApplication();
+        if (testUSBCopy) {
+            global.setFirstStart(true);
+        }
         ThreadUtils.getInstance().executeWithTimeoutAsync(
                 () -> dodoNothing(),
                 delay_seconds, TimeUnit.SECONDS,
@@ -209,9 +225,9 @@ public class LoadingActivity extends GeneralActivity {
 //                        initializeApp(true);
 //                    }
 //                });
-//                initializeApp(true);
-                Intent intent = new Intent(LoadingActivity.this, OnboardingActivity.class);
-                startActivity(intent);
+                initializeApp(true);
+//                Intent intent = new Intent(LoadingActivity.this, OnboardingActivity.class);
+//                startActivity(intent);
             }
         });
     }
