@@ -3,7 +3,9 @@ package nie.translator.rtranslator.standby
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
+import nie.translator.rtranslator.Global
 
 // StandbyManager.kt
 object StandbyManager {
@@ -34,9 +36,15 @@ object StandbyManager {
     }
 
     private fun showStandby(context: Context) {
+        //检测应用是否在前台
+        if (!AppUtils.isAppForeground()) {
+            LogUtils.d("StandbyManager", "App is in background, not showing standby")
+            resetTimer(context)
+            return
+        }
         if (!isStandbyVisible) {
             isStandbyVisible = true
-            StandbyWindow.show(context){
+            StandbyWindow.show(context) {
                 resetTimer(context) // 隐藏后自动开始计时
             }
         }
