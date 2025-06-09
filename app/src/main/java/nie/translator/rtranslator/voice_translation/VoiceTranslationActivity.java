@@ -97,7 +97,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
     public static final int CONVERSATION_FRAGMENT = 1;
     public static final int WALKIE_TALKIE_FRAGMENT = 2;
     public static final int TRANSLATION_FRAGMENT = 3;
-    public static final int DEFAULT_FRAGMENT = TRANSLATION_FRAGMENT;
+    public static final int DEFAULT_FRAGMENT = WALKIE_TALKIE_FRAGMENT;
     public static final int NO_PERMISSIONS = -10;
     private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 2;
     public static String[] REQUIRED_PERMISSIONS;
