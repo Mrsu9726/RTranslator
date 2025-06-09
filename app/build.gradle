@@ -150,6 +150,9 @@ dependencies {
     //弹窗库
     implementation 'com.github.li-xiaojun:XPopup:2.10.0'
 
-    implementation files('libs/serialport-1.0.7.aar')
+    implementation 'com.kotlinx:yserialport:2.2.8'
+    //功能类似Utilcode的工具集合，但是功能可能比utilcode还多
+    //https://github.com/yutils
+//    implementation 'com.kotlinx:yutils:2.2.5'
 
 }

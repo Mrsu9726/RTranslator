@@ -16,11 +16,13 @@
 
 package nie.translator.rtranslator;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,6 +31,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
@@ -44,6 +47,8 @@ import nie.translator.rtranslator.voice_translation.VoiceTranslationActivity;
 import nie.translator.rtranslator.voice_translation.neural_networks.NeuralNetworkApi;
 import nie.translator.rtranslator.voice_translation.neural_networks.translation.Translator;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -68,6 +73,8 @@ public class LoadingActivity extends GeneralActivity {
         // Required empty public constructor
     }
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +90,7 @@ public class LoadingActivity extends GeneralActivity {
             setTheme(R.style.Theme_Speech);
         }
         setContentView(R.layout.activity_loading);
+        checkMyPermission();
         mainHandler = new Handler(Looper.getMainLooper());
 
         // Keep the splash screen visible for this Activity.
@@ -109,6 +117,22 @@ public class LoadingActivity extends GeneralActivity {
 
     }
 
+    private void checkMyPermission() {
+        LogUtils.d("LoadingActivity", "checkMyPermission");
+        // 检查权限
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // 请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
+        }
+    }
+
     public void onResume() {
         super.onResume();
         isVisible = true;
@@ -122,6 +146,20 @@ public class LoadingActivity extends GeneralActivity {
                 result -> goActivityByIsFirst(),
                 error -> Log.e("BB", "处理失败或超时：" + error.getMessage())
         );
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                LogUtils.i("LoadingActivity", "权限已授予");
+            } else {
+                LogUtils.i("LoadingActivity", "权限被拒绝");
+            }
+        }
     }
 
     private void goActivityByIsFirst() {

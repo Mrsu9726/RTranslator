@@ -53,6 +53,9 @@ import com.lxj.xpopup.XPopup;
 import com.translate.download.ApkCopyCallback;
 import com.translate.download.ModelCopyCallback;
 import com.translate.download.UsbModelCopyService;
+import com.yujing.serialport.SerialPort;
+import com.yujing.yserialport.DataListener;
+import com.yujing.yserialport.YSerialPort;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -209,6 +212,25 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 LogUtils.e("apk 取消");
             }
         });
+
+
+    }
+
+    /**
+     * 开始读取串口数据
+     * 但是波特率256000，RK的芯片好像不支持
+     */
+    private void startSerialPort() {
+        YSerialPort ySerialPort = new YSerialPort(this, "/dev/ttyS4", "256000");
+        //设置数据监听
+        ySerialPort.addDataListener(new DataListener() {
+            @Override
+            public void value(String hexString, byte[] bytes) {
+                //结果回调:haxString , bytes
+                LogUtils.d("串口输出 ySerialPort：", hexString);
+            }
+        });
+        ySerialPort.start();
     }
 
     ProgressPopupView progressPopup;

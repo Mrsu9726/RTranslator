@@ -35,6 +35,7 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ShellUtils;
 import com.ys.rkapi.MyManager;
 
 import java.io.File;
@@ -96,6 +97,37 @@ public class Global extends Application implements DefaultLifecycleObserver {
         getMicSensitivity();
         createNotificationChannel();
         initYSAPI();
+        initLogUtils();
+
+    }
+
+    /**
+     * val config = LogUtils.getConfig()
+     * .setLogSwitch(true)                  // 总开关
+     * .setConsoleSwitch(true)             // 是否打印到控制台
+     * .setGlobalTag("MyAppLog")           // 全局TAG
+     * .setFileSwitch(true)                // 是否写入文件
+     * .setDir("/sdcard/MyAppLogs/")       // 日志保存目录（可选）
+     * .setFilePrefix("log")               // 日志文件前缀
+     * .setBorderSwitch(true)              // 是否开启边框
+     * .setSingleTagSwitch(true)           // 是否只显示一个TAG（避免换行）
+     */
+    private void initLogUtils() {
+        LogUtils.getConfig().setSaveDays(30)
+                .setGlobalTag("Ai Talky")
+                .setLogHeadSwitch(true)
+                .setLogSwitch(true)
+                .setStackDeep(5)//堆栈深度
+                .setBorderSwitch(false)
+                .setConsoleSwitch(true)
+                .setDir(new File(this.getFilesDir(), "log"))  // 指定 App 私有目录
+                .setFilePrefix("log")
+                .setBorderSwitch(true)
+                .setLog2FileSwitch(true)
+                .setSingleTagSwitch(true);
+
+        LogUtils.d("日志保存地址：" + LogUtils.getConfig().getDir());
+
     }
 
     private void initYSAPI() {

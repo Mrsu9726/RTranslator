@@ -17,7 +17,7 @@
 
 <resources>
     <string name="app_name" translatable="false">
-        Translator</string>
+        Ai Talky</string>
 
     <string name="mic">mic</string>
     <string name="btHeadset">bt-headset</string>
