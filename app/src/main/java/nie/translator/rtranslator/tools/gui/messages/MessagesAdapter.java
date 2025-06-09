@@ -32,8 +32,10 @@ import com.blankj.utilcode.util.LogUtils;
 
 import java.util.ArrayList;
 
+import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
 import nie.translator.rtranslator.standby.StandbyManager;
+import opencc.OpenCC;
 
 /**
  * Is used to connect to the RecycleView, which functions as a ListView, a list of strings, which will be inserted in the ViewHolder layout and this will be inserted in the list
@@ -44,7 +46,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     //private static final int PREVIEW = 2;
     private ArrayList<GuiMessage> mResults = new ArrayList<>();
     private Callback callback;
-
+    OpenCC openCC = new OpenCC();
     public MessagesAdapter(ArrayList<GuiMessage> messages, @NonNull Callback callback) {
         this.callback = callback;
         LogUtils.d("MessagesAdapter", "MessagesAdapter");
@@ -55,6 +57,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mResults.addAll(messages);
             notifyItemRangeInserted(0, messages.size() - 1);
         }
+        openCC.setConversion("t2s");
     }
 
     @NonNull
@@ -80,8 +83,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ((ReceivedHolder) holder).sender.setText(message.getMessage().getSender().getName());
                 Log.d("recyclerview", "RecyclerView bind sender");
             }
-            ((MessageHolder) holder).setText(message.getMessage().getText());
-            ((MessageHolder) holder).setSrcText(message.getMessage().getSrcText());
+            ((MessageHolder) holder).setText(openCC.convert(message.getMessage().getText()));
+            ((MessageHolder) holder).setSrcText(openCC.convert(message.getMessage().getSrcText()));
             Log.d("recyclerview", "RecyclerView bind text");
             //holder.itemView.requestLayout();
         }

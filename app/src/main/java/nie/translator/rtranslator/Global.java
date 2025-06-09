@@ -54,6 +54,7 @@ import nie.translator.rtranslator.voice_translation.neural_networks.voice.Record
 
 
 public class Global extends Application implements DefaultLifecycleObserver {
+    private static Global instance;
     private ArrayList<CustomLocale> languages = new ArrayList<>();
     private ArrayList<CustomLocale> translatorLanguages = new ArrayList<>();
     private ArrayList<CustomLocale> ttsLanguages = new ArrayList<>();
@@ -81,9 +82,14 @@ public class Global extends Application implements DefaultLifecycleObserver {
 
     private MyManager ysManager;
 
+    public static Global getInstance() {
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         mainHandler = new Handler(Looper.getMainLooper());
         recentPeersDataManager = new RecentPeersDataManager(this);
         //initializeBluetoothCommunicator();

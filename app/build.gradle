@@ -151,4 +151,5 @@ dependencies {
     implementation 'com.github.li-xiaojun:XPopup:2.10.0'
 
     implementation files('libs/serialport-1.0.7.aar')
+
 }
