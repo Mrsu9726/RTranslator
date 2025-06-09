@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager;
 import nie.translator.rtranslator.settings.SettingsActivity;
 import nie.translator.rtranslator.standby.StandbyManager;
 import nie.translator.rtranslator.tools.CustomLocale;
@@ -298,6 +300,14 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
             public void onClick(View v) {
                 Log.d("button", "exitButton pressed");
                 activity.onBackPressed();
+            }
+        });
+
+        GlobalLiveDataManager.INSTANCE.getSound_decibel().observe(getViewLifecycleOwner(), new Observer<Double>() {
+            @Override
+            public void onChanged(Double aDouble) {
+                LogUtils.d("WalkieTalkieFragment", "当前分贝  sound decibel: " + aDouble);
+                StandbyManager.INSTANCE.hideOrReset(requireContext());
             }
         });
     }

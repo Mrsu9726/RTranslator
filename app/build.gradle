@@ -155,4 +155,7 @@ dependencies {
     //https://github.com/yutils
 //    implementation 'com.kotlinx:yutils:2.2.5'
 
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2' // 最新版本可查 [Google Maven]
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+
 }

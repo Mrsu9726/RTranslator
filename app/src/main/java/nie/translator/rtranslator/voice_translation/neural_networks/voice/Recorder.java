@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import java.util.Arrays;
 
 import nie.translator.rtranslator.Global;
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager;
 import nie.translator.rtranslator.voice_translation._conversation_mode._conversation.ConversationService;
 
 
@@ -89,6 +90,8 @@ public class Recorder {
     private AudioDeviceCallback audioDeviceCallback;
     AudioManager audioManager;
 
+    // 新增变量，用于存储当前分贝值
+    private double currentDecibel;
 
     public Recorder(Global global, boolean useBluetoothHeadset, @NonNull Callback callback, @Nullable ConversationService.BluetoothHeadsetCallback bluetoothHeadsetCallback) {
         this.useBluetoothHeadset = useBluetoothHeadset;
@@ -109,10 +112,10 @@ public class Recorder {
         }
 
         //initialize the bluetooth headset mic management
-        if(useBluetoothHeadset) {
+        if (useBluetoothHeadset) {
             this.audioManager = (AudioManager) global.getSystemService(Context.AUDIO_SERVICE);
             boolean success = setBLEHeadsetConnection();
-            if(success) {
+            if (success) {
                 if (bluetoothHeadsetCallback != null) {
                     bluetoothHeadsetCallback.onScoAudioConnected();
                 }
@@ -120,7 +123,7 @@ public class Recorder {
             this.audioDeviceCallback = new AudioDeviceCallback() {
                 @Override
                 public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
-                    if(connectedBleHeadset == null) {
+                    if (connectedBleHeadset == null) {
                         boolean success = setBLEHeadsetConnection();
                         if (success) {
                             if (bluetoothHeadsetCallback != null) {
@@ -134,12 +137,12 @@ public class Recorder {
                 public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
                     boolean found = false;
                     for (AudioDeviceInfo removedDevice : removedDevices) {
-                        if (removedDevice.equals(connectedBleHeadset)){
+                        if (removedDevice.equals(connectedBleHeadset)) {
                             found = true;
                             break;
                         }
                     }
-                    if(found) {
+                    if (found) {
                         connectedBleHeadset = null;
                         audioManager.stopBluetoothSco();
                         if (bluetoothHeadsetCallback != null) {
@@ -161,7 +164,7 @@ public class Recorder {
         // Stop recording if it is currently ongoing.
         stop();
         // Start recording.
-        if(mAudioRecord != null) {
+        if (mAudioRecord != null) {
             mAudioRecord.startRecording();  // here doesn't work with callback
         }
         // Start processing the captured audio.
@@ -201,11 +204,11 @@ public class Recorder {
         int voiceLength = getMBufferRangeSize(startVoiceIndex, tailIndex);
         float[] data = new float[voiceLength];
         int circularIndex = startVoiceIndex;
-        for(int i=0; i<voiceLength; i++){
+        for (int i = 0; i < voiceLength; i++) {
             data[i] = mBuffer[circularIndex];
-            if (circularIndex < mBuffer.length-1){
+            if (circularIndex < mBuffer.length - 1) {
                 circularIndex++;
-            }else{
+            } else {
                 circularIndex = 0;
             }
         }
@@ -216,10 +219,10 @@ public class Recorder {
         mCallback.onVoiceEnd();
     }
 
-    public void destroy(){
-        if(useBluetoothHeadset) {
+    public void destroy() {
+        if (useBluetoothHeadset) {
             audioManager.unregisterAudioDeviceCallback(audioDeviceCallback);
-            if(connectedBleHeadset != null){
+            if (connectedBleHeadset != null) {
                 audioManager.stopBluetoothSco();
             }
         }
@@ -258,8 +261,8 @@ public class Recorder {
             AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, CHANNEL, ENCODING, minSizeInBytes);   //the option MIC produce better result than the option VOICE_RECOGNITION
             //audioRecord.setPreferredDevice()
             if (audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
-                readSize = (minSizeInBytes/4)*2;
-                mBuffer = new float[((MAX_SPEECH_LENGTH_MILLIS+1000)/1000)*sampleRate];  //the buffer size will be larger (by one second) than the audio data of duration MAX_SPEECH_LENGTH_MILLIS
+                readSize = (minSizeInBytes / 4) * 2;
+                mBuffer = new float[((MAX_SPEECH_LENGTH_MILLIS + 1000) / 1000) * sampleRate];  //the buffer size will be larger (by one second) than the audio data of duration MAX_SPEECH_LENGTH_MILLIS
                 return audioRecord;
             } else {
                 audioRecord.release();
@@ -273,27 +276,27 @@ public class Recorder {
     }
 
     public void setManualMode(boolean manualMode) {
-        if(isManualMode != manualMode) {
+        if (isManualMode != manualMode) {
             isManualMode = manualMode;
-            if(isRecording){
+            if (isRecording) {
                 mCallback.onVoiceEnd();
             }
-            if(isManualMode){
+            if (isManualMode) {
                 Log.d("mic", "manual mode activating");
                 stop();
                 Log.d("mic", "manual mode activated");
-            }else{
+            } else {
                 start();
                 Log.d("mic", "manual mode deactivated");
             }
         }
     }
 
-    public void startRecording(){
+    public void startRecording() {
         start();
     }
 
-    public void stopRecording(){
+    public void stopRecording() {
         end();
         stop();
     }
@@ -339,12 +342,17 @@ public class Recorder {
                     }
                     //we notify volume level
                     notifyVolumeLevel(mBuffer, oldTailIndex, tailIndex);
+                    // 计算分贝值
+                    currentDecibel = calculateDecibel(mBuffer, oldTailIndex, tailIndex);
+                    if (currentDecibel > 30) {
+                        GlobalLiveDataManager.INSTANCE.getSound_decibel().postValue(currentDecibel);
+                    }
                     //we do the rest of voice processing
                     final long now = System.currentTimeMillis();
                     if (isHearingVoice(mBuffer, oldTailIndex, tailIndex)) {
                         if (mLastVoiceHeardMillis == Long.MAX_VALUE) {    // use Long's maximum limit to indicate that we have no voice
                             mVoiceStartedMillis = now;
-                            if(!Thread.currentThread().isInterrupted()) {
+                            if (!Thread.currentThread().isInterrupted()) {
                                 mCallback.onVoiceStart();
                             }
                             if (getMBufferSize() > prevVoiceLength) {
@@ -359,13 +367,13 @@ public class Recorder {
                         }
                         mLastVoiceHeardMillis = now;
                         if (now - (mVoiceStartedMillis - global.getPrevVoiceDuration()) > MAX_SPEECH_LENGTH_MILLIS) {
-                            if(!Thread.currentThread().isInterrupted()) {
+                            if (!Thread.currentThread().isInterrupted()) {
                                 end();
                             }
                         }
                     } else if (mLastVoiceHeardMillis != Long.MAX_VALUE) {
                         if (now - mLastVoiceHeardMillis > global.getSpeechTimeout()) {
-                            if(!Thread.currentThread().isInterrupted()) {
+                            if (!Thread.currentThread().isInterrupted()) {
                                 end();
                             }
                         }
@@ -378,15 +386,15 @@ public class Recorder {
         }
     }
 
-    private int getMBufferSize(){
+    private int getMBufferSize() {
         return getMBufferRangeSize(headIndex, tailIndex);
     }
 
-    private int getMBufferRangeSize(int begin, int end){
-        if(begin <= end){
+    private int getMBufferRangeSize(int begin, int end) {
+        if (begin <= end) {
             return end - begin;
-        }else{    //(begin > end)
-            return (mBuffer.length-begin) + end;
+        } else {    //(begin > end)
+            return (mBuffer.length - begin) + end;
         }
     }
 
@@ -409,7 +417,7 @@ public class Recorder {
     }
 
     private boolean isHearingVoice(float[] buffer, int begin, int end) {
-        if(!isManualMode) {
+        if (!isManualMode) {
             // We iterate circularly the mBuffer from the begin index to the end index, and if one of the values exceed the threshold the method returns true.
             // Also The range with the old ENCODING_PCM_16BIT was [-32768, 32767], while now with the new ENCODING_PCM_FLOAT it is [-1, 1],
             // so to convert the values of the new range into those of the old range (the threshold is based on the old values) I have to multiply them by 32767.
@@ -432,20 +440,20 @@ public class Recorder {
             } else {
                 return false;
             }
-        }else{
+        } else {
             return true;  //in this way if we are in manual mode the recording will run until we call end()
         }
     }
 
     private void notifyVolumeLevel(float[] buffer, int begin, int end) {
-        if(isRecording){
+        if (isRecording) {
             float[] amplifiedBuffer = new float[getMBufferRangeSize(begin, end)];
 
             //we make a copy of the buffer with every value amplified and converted to an absolute value
             //so the range of every value from [-1, 1] will become [0, amplification]
             int count = begin;
             int linearCount = 0;
-            float amplification = (32767f/global.getAmplitudeThreshold()) * 2;
+            float amplification = (32767f / global.getAmplitudeThreshold()) * 2;
             while (count != end) {
                 amplifiedBuffer[linearCount] = (float) (Math.abs(buffer[count]) * amplification);
                 if (count < buffer.length - 1) {
@@ -474,7 +482,7 @@ public class Recorder {
 
             //we do the average of every value in amplifiedBuffer
             float sum = 0;
-            for (int i=0; i<amplifiedBuffer.length; i++) {
+            for (int i = 0; i < amplifiedBuffer.length; i++) {
                 sum += amplifiedBuffer[i];
             }
             float average = sum / (amplifiedBuffer.length /*- nMinValuesToRemove*/);
@@ -482,15 +490,15 @@ public class Recorder {
             //Log.d("volume", "volume: " + average);
 
             //we cap the values between 0 and 1 (and we decrease the sensitivity in the [0.8, 1] range)
-            if(average > 1){
-                float surplus = average-1f;
+            if (average > 1) {
+                float surplus = average - 1f;
                 surplus = surplus / 5;
                 average = 0.8f + surplus;
             }
-            if(average > 1){
+            if (average > 1) {
                 average = 1;
             }
-            if(average < 0){
+            if (average < 0) {
                 average = 0;
             }
 
@@ -500,11 +508,11 @@ public class Recorder {
         }
     }
 
-    public boolean isOnHeadsetSco(){
+    public boolean isOnHeadsetSco() {
         return connectedBleHeadset != null;
     }
 
-    private boolean setBLEHeadsetConnection(){
+    private boolean setBLEHeadsetConnection() {
         AudioDeviceInfo[] allDeviceInfo = audioManager.getDevices(GET_DEVICES_INPUTS);
         for (AudioDeviceInfo device : allDeviceInfo) {
             int deviceType = device.getType();
@@ -515,8 +523,8 @@ public class Recorder {
                 }
                 return true;
             }
-            if(deviceType == AudioDeviceInfo.TYPE_BLE_HEADSET || deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP){  //untested
-                if(mAudioRecord != null) {
+            if (deviceType == AudioDeviceInfo.TYPE_BLE_HEADSET || deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP) {  //untested
+                if (mAudioRecord != null) {
                     boolean success = mAudioRecord.setPreferredDevice(device);
                     if (success) {
                         connectedBleHeadset = device;
@@ -528,6 +536,37 @@ public class Recorder {
         return false;
     }
 
+    // 新增方法：计算声音分贝值
+    private double calculateDecibel(float[] buffer, int begin, int end) {
+        double sum = 0;
+        int count = begin;
+        int sampleCount = 0;
+
+        while (count != end) {
+            double sample = buffer[count];
+            sum += sample * sample;
+            if (count < buffer.length - 1) {
+                count++;
+            } else {
+                count = 0;
+            }
+            sampleCount++;
+        }
+
+        if (sampleCount == 0) {
+            return 0;
+        }
+
+        double rms = Math.sqrt(sum / sampleCount);
+        // 参考值，根据实际情况调整
+        double reference = 0.00002;
+        return 20 * Math.log10(rms / reference);
+    }
+
+    // 新增方法：获取当前分贝值
+    public double getCurrentDecibel() {
+        return currentDecibel;
+    }
 
     public static abstract class Callback {
         private Recorder recorder;
@@ -543,7 +582,7 @@ public class Recorder {
             if (recorder != null) {
                 recorder.isRecording = true;
             }
-            Log.e("recorder","onVoiceStart");
+            Log.e("recorder", "onVoiceStart");
         }
 
         /**
@@ -553,7 +592,7 @@ public class Recorder {
          * @param size The peersSize of the actual data in {@code data}.
          */
         public void onVoice(@NonNull float[] data, int size) {
-            Log.e("recorder","onVoice");
+            Log.e("recorder", "onVoice");
         }
 
         /**
@@ -563,14 +602,16 @@ public class Recorder {
             if (recorder != null) {
                 recorder.isRecording = false;
             }
-            Log.e("recorder","onVoiceEnd");
+            Log.e("recorder", "onVoiceEnd");
         }
 
         /**
          * Called continuously when we hear voice
+         *
          * @param volumeLevel a value between [0, 1] that represent the volume percentage of the audio captured by the microphone
          */
-        public void onVolumeLevel(float volumeLevel){}
+        public void onVolumeLevel(float volumeLevel) {
+        }
     }
 
     public static abstract class SimpleCallback extends Callback {

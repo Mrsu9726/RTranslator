@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.LogUtils
 
 // StandbyManager.kt
 object StandbyManager {
-    private const val STANDBY_DELAY_MS = 120_000L // 1 minute
+    private const val STANDBY_DELAY_MS = 60_000L // 1 minute
     private var handler: Handler? = null
     private var standbyRunnable: Runnable? = null
     private var isStandbyVisible = false
