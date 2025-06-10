@@ -18,4 +18,6 @@ object GlobalLiveDataManager {
     val is_night_theme = MutableLiveData<Boolean>(false)
 
     val show_standby = MutableLiveData<Boolean>(false)
+    //自动模式，手动模式
+    val  manual_model = MutableLiveData<Boolean>(false)
 }

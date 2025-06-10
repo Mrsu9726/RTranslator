@@ -28,6 +28,7 @@ import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.standby.StandbyManager;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.ErrorCodes;
+import nie.translator.rtranslator.tools.PlayBeepUtil;
 import nie.translator.rtranslator.tools.Tools;
 import nie.translator.rtranslator.tools.gui.messages.GuiMessage;
 import nie.translator.rtranslator.voice_translation.VoiceTranslationService;
@@ -207,6 +208,7 @@ public class WalkieTalkieService extends VoiceTranslationService {
             @Override
             public void onVoiceStart() {
                 super.onVoiceStart();
+                PlayBeepUtil.playBeep();
                 // we notify the client
                 WalkieTalkieService.super.notifyVoiceStart();
             }
@@ -241,6 +243,7 @@ public class WalkieTalkieService extends VoiceTranslationService {
             @Override
             public void onVoiceEnd() {
                 super.onVoiceEnd();
+                PlayBeepUtil.playEndBeep();
                 // we notify the client
                 WalkieTalkieService.super.notifyVoiceEnd();
             }

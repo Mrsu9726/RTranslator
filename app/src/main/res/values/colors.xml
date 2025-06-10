@@ -45,7 +45,7 @@
     <color name="red">#d50000</color>
     <color name="yellow">#ffd600</color>
     <color name="green">#00c853</color>
-    <color name="walkie_bg_color">#2C2C2C</color>
+    <color name="walkie_bg_color">#121212</color>//聊天背景色
     <color name="language_selector_bg_color">#303030</color>
     <color name="src_text_color">#D1D1D1</color>
     <color name="transparent">#00000000</color>

@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -33,6 +34,7 @@ import android.view.WindowInsets;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -49,7 +51,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.hjq.shape.layout.ShapeLinearLayout;
 
 import java.util.ArrayList;
 
@@ -80,6 +84,7 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
     public static final long LONG_PRESS_THRESHOLD_MS = 700;
     private boolean isMicAutomatic = true;
     protected ButtonMic microphone;
+    private LinearLayout leftMicLayout, rightMicLayout;
     private ButtonMic leftMicrophone;
     private ButtonMic rightMicrophone;
     private AnimatedTextView leftMicLanguage;
@@ -108,6 +113,8 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
     private Handler mHandler = new Handler();
 
     private ConstraintLayout syntalk_setting_icon;
+
+    private ShapeLinearLayout autoMicLayout, manuMicLayout;
 
     public WalkieTalkieFragment() {
         // Required empty public constructor
@@ -138,6 +145,8 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
         sound = view.findViewById(R.id.soundButton);
         microphone = view.findViewById(R.id.buttonMic);
         microphone.initialize(this, view.findViewById(R.id.leftLine), view.findViewById(R.id.centerLine), view.findViewById(R.id.rightLine));
+        leftMicLayout = view.findViewById(R.id.leftMic);
+        rightMicLayout = view.findViewById(R.id.rightMic);
         leftMicrophone = view.findViewById(R.id.buttonMicLeft);
         leftMicrophone.initialize(null, view.findViewById(R.id.leftLineL), view.findViewById(R.id.centerLineL), view.findViewById(R.id.rightLineL));
         rightMicrophone = view.findViewById(R.id.buttonMicRight);
@@ -147,7 +156,8 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
         settingsButton = view.findViewById(R.id.settingsButton);
         syntalk_setting_icon = view.findViewById(R.id.syntalk_setting_icon);
         bgImageView = view.findViewById(R.id.bgImageView);
-
+        autoMicLayout = view.findViewById(R.id.mic_model_auto_layout);
+        manuMicLayout = view.findViewById(R.id.mic_model_manu_layout);
         description.setText(R.string.description_walkie_talkie);
         description.setVisibility(View.GONE);
         deactivateInputs(DeactivableButton.DEACTIVATED);
@@ -211,26 +221,41 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                 }
             }
         });
-
-        microphone.setOnClickListenerForActivated(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (microphone.getState() == ButtonMic.STATE_NORMAL) {
-                    if (isMicAutomatic) {
-                        if (microphone.isMute()) {
-                            startMicrophone(true);
-                        } else {
-                            stopMicrophone(true);
-                        }
-                    } else {
-                        switchMicMode(true);
-                    }
-                }
-            }
-        });
+        //屏蔽自动模式按钮点击事件，
+//        microphone.setOnClickListenerForActivated(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (microphone.getState() == ButtonMic.STATE_NORMAL) {
+//                    if (isMicAutomatic) {
+//                        if (microphone.isMute()) {
+//                            startMicrophone(true);
+//                        } else {
+//                            stopMicrophone(true);
+//                        }
+//                    } else {
+//                        switchMicMode(true);
+//                    }
+//                }
+//            }
+//        });
         microphone.setOnClickListenerForDeactivatedForMissingMicPermission(micMissingClickListener);
         microphone.setOnClickListenerForDeactivated(deactivatedClickListener);
-
+        autoMicLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GlobalLiveDataManager.INSTANCE.getManual_model().postValue(false);
+                autoMicLayout.getShapeDrawableBuilder().setSolidGradientColors(Color.parseColor("#B59552"), Color.parseColor("#604D24")).buildBackgroundDrawable();
+                manuMicLayout.getShapeDrawableBuilder().setSolidGradientColors(Color.parseColor("#00000000"), Color.parseColor("#00000000")).buildBackgroundDrawable();
+            }
+        });
+        manuMicLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GlobalLiveDataManager.INSTANCE.getManual_model().postValue(true);
+                autoMicLayout.getShapeDrawableBuilder().setSolidGradientColors(Color.parseColor("#00000000"), Color.parseColor("#00000000")).buildBackgroundDrawable();
+                manuMicLayout.getShapeDrawableBuilder().setSolidGradientColors(Color.parseColor("#B59552"), Color.parseColor("#604D24")).buildBackgroundDrawable();
+            }
+        });
         leftMicrophone.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -332,10 +357,40 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
         });
         GlobalLiveDataManager.INSTANCE.getShow_standby().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
+            public void onChanged(Boolean show) {
+                if (!show) {
+                    //显示时不清空，收起时清空对话列表
+                    if (mAdapter != null) {
+                        mAdapter.clear();
+                    }
+                }
+            }
+        });
+        GlobalLiveDataManager.INSTANCE.getManual_model().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
             public void onChanged(Boolean aBoolean) {
-                //清空对话列表
-                if (mAdapter != null) {
-                    mAdapter.clear();
+                if (aBoolean) {
+                    //手动模式
+                    leftMicLayout.setVisibility(View.VISIBLE);
+                    rightMicLayout.setVisibility(View.VISIBLE);
+                    microphone.setVisibility(View.GONE);
+
+                } else {
+                    //自动模式
+                    leftMicLayout.setVisibility(View.GONE);
+                    rightMicLayout.setVisibility(View.GONE);
+                    microphone.setVisibility(View.VISIBLE);
+                }
+                if (microphone.getState() == ButtonMic.STATE_NORMAL) {
+                    if (isMicAutomatic) {
+                        if (microphone.isMute()) {
+                            startMicrophone(true);
+                        } else {
+                            stopMicrophone(true);
+                        }
+                    } else {
+                        switchMicMode(true);
+                    }
                 }
             }
         });

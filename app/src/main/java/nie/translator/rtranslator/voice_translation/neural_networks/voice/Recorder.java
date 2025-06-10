@@ -418,7 +418,7 @@ public class Recorder {
 
     private boolean isHearingVoice(float[] buffer, int begin, int end) {
         if (!isManualMode) {
-            if (currentDecibel > 40) {
+            if (currentDecibel > 50) {
                 return true;
             }
             // We iterate circularly the mBuffer from the begin index to the end index, and if one of the values exceed the threshold the method returns true.
