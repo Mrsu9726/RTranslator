@@ -65,12 +65,13 @@ public class AccessActivity extends GeneralActivity {
         } else {
             final SharedPreferences sharedPreferences = this.getSharedPreferences("default", Context.MODE_PRIVATE);
             String savedUserName = sharedPreferences.getString("name", "");
+            startFragment(DOWNLOAD_FRAGMENT, null);
             if (savedUserName.length() > 0) {  //means that the user has already inserted the info in UserDataFragment, so we can start directly the DownloadFragment
                 startFragment(DOWNLOAD_FRAGMENT, null);
             } else {
                 LogUtils.d("进入提示信息 02");
 //                startFragment(NOTICE_FRAGMENT, null);
-                sharedPreferences.edit().putString("name", "syntalk").apply();
+                sharedPreferences.edit().putString("name", "AI TALKY").apply();
                 startFragment(DOWNLOAD_FRAGMENT, null);
             }
         }

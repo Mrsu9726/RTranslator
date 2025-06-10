@@ -110,7 +110,7 @@ public class LoadingActivity extends GeneralActivity {
             SharedPreferences.Editor editor;
             editor = sharedPreferences.edit();
             //假设已经拷贝了模型
-            editor.putString("name", "syntalk");
+            editor.putString("name", "AI TALKY");
             editor.putLong("currentDownloadId", -1);
             editor.apply();
         }

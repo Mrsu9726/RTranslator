@@ -16,8 +16,12 @@
 
 package nie.translator.rtranslator.voice_translation._walkie_talkie_mode._walkie_talkie;
 
+import static com.blankj.utilcode.util.ViewUtils.runOnUiThread;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -56,6 +61,7 @@ import nie.translator.rtranslator.standby.StandbyManager;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.ErrorCodes;
 import nie.translator.rtranslator.tools.Tools;
+import nie.translator.rtranslator.tools.blur.ImageFilter;
 import nie.translator.rtranslator.tools.gui.AnimatedTextView;
 import nie.translator.rtranslator.tools.gui.ButtonMic;
 import nie.translator.rtranslator.tools.gui.ButtonSound;
@@ -73,7 +79,6 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
     public static final int INITIALIZE = 0;
     public static final long LONG_PRESS_THRESHOLD_MS = 700;
     private boolean isMicAutomatic = true;
-    private ConstraintLayout container;
     protected ButtonMic microphone;
     private ButtonMic leftMicrophone;
     private ButtonMic rightMicrophone;
@@ -84,6 +89,8 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
     private ConstraintLayout firstLanguageSelector;
     private ConstraintLayout secondLanguageSelector;
     private AppCompatImageButton settingsButton;
+
+    private ImageView bgImageView;
     private ButtonSound sound;
     private long lastPressedLeftMic = -1;
     private long lastPressedRightMic = -1;
@@ -99,6 +106,8 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
     private String selectedLanguageCode;
     private AlertDialog dialog;
     private Handler mHandler = new Handler();
+
+    private ConstraintLayout syntalk_setting_icon;
 
     public WalkieTalkieFragment() {
         // Required empty public constructor
@@ -122,10 +131,10 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         constraintLayout = view.findViewById(R.id.container);
-        container = view.findViewById(R.id.walkie_talkie_main_container);
         firstLanguageSelector = view.findViewById(R.id.firstLanguageSelector);
         secondLanguageSelector = view.findViewById(R.id.secondLanguageSelector);
         exitButton = view.findViewById(R.id.exitButton);
+        exitButton.setVisibility(View.GONE);
         sound = view.findViewById(R.id.soundButton);
         microphone = view.findViewById(R.id.buttonMic);
         microphone.initialize(this, view.findViewById(R.id.leftLine), view.findViewById(R.id.centerLine), view.findViewById(R.id.rightLine));
@@ -136,7 +145,11 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
         leftMicLanguage = view.findViewById(R.id.textButton1);
         rightMicLanguage = view.findViewById(R.id.textButton2);
         settingsButton = view.findViewById(R.id.settingsButton);
+        syntalk_setting_icon = view.findViewById(R.id.syntalk_setting_icon);
+        bgImageView = view.findViewById(R.id.bgImageView);
+
         description.setText(R.string.description_walkie_talkie);
+        description.setVisibility(View.GONE);
         deactivateInputs(DeactivableButton.DEACTIVATED);
         //container.setVisibility(View.INVISIBLE);  //we make the UI invisible until the restore of the attributes from the service (to avoid instant changes of the UI).
     }
@@ -173,7 +186,14 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                 startActivity(intent);
             }
         });
-
+        syntalk_setting_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
         sound.setOnClickListenerForDeactivated(deactivatedClickListener);
         sound.setOnClickListenerForTTSError(new View.OnClickListener() {
             @Override
@@ -310,6 +330,39 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                 StandbyManager.INSTANCE.hideOrReset(requireContext());
             }
         });
+        GlobalLiveDataManager.INSTANCE.getShow_standby().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                //清空对话列表
+                if (mAdapter != null) {
+                    mAdapter.clear();
+                }
+            }
+        });
+        blurImage();
+    }
+
+    Bitmap bitmap;
+
+    private void blurImage() {
+        // 模糊背景
+        //从资源中获取Bitmap
+        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.standby_night_bg);
+        //异步处理
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //高斯模糊处理图片
+                bitmap = ImageFilter.doBlur(bitmap, 30, false);
+                //处理完成后返回主线程
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bgImageView.setImageBitmap(bitmap);
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override

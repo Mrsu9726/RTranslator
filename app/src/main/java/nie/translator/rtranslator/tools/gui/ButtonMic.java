@@ -48,9 +48,9 @@ public class ButtonMic extends DeactivableButton {
     public static final int SIZE_LISTENING_DP = 76;
     public static final float SIZE_ICON_DP = 42;
 
-    public static final int MAX_LENGTH_LEFT_LINE_DP = 21;
-    public static final int MAX_LENGTH_CENTER_LINE_DP = 26;
-    public static final int MAX_LENGTH_RIGHT_LINE_DP = 15;
+    public static final int MAX_LENGTH_LEFT_LINE_DP = 31;
+    public static final int MAX_LENGTH_CENTER_LINE_DP = 46;
+    public static final int MAX_LENGTH_RIGHT_LINE_DP = 38;
     public static final int MIN_LINE_LENGTH_DP = 5;
 
     public static final int STATE_NORMAL = 0;
@@ -83,8 +83,8 @@ public class ButtonMic extends DeactivableButton {
     public ButtonMic(Context context) {
         super(context);
         this.context = context;
-        colorActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.primary));
-        colorMutedActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.primary_very_dark), GuiTools.getColorStateList(context,R.color.primary_very_lite));
+        colorActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.accent_white));
+        colorMutedActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.primary_very_lite));
         colorDeactivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.gray));
         colorMutedDeactivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.very_very_dark_gray), GuiTools.getColorStateList(context,R.color.very_very_light_gray));
     }
@@ -92,8 +92,8 @@ public class ButtonMic extends DeactivableButton {
     public ButtonMic(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        colorActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.primary));
-        colorMutedActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.primary_very_dark), GuiTools.getColorStateList(context,R.color.primary_very_lite));
+        colorActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.accent_white));
+        colorMutedActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.primary_very_lite));
         colorDeactivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.gray));
         colorMutedDeactivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.very_very_dark_gray), GuiTools.getColorStateList(context,R.color.very_very_light_gray));
     }
@@ -101,8 +101,8 @@ public class ButtonMic extends DeactivableButton {
     public ButtonMic(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        colorActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.primary));
-        colorMutedActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.primary_very_dark), GuiTools.getColorStateList(context,R.color.primary_very_lite));
+        colorActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.accent_white));
+        colorMutedActivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.primary_very_lite));
         colorDeactivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.accent_white), GuiTools.getColorStateList(context,R.color.gray));
         colorMutedDeactivated = new ButtonMicColor(GuiTools.getColorStateList(context,R.color.very_very_dark_gray), GuiTools.getColorStateList(context,R.color.very_very_light_gray));
     }

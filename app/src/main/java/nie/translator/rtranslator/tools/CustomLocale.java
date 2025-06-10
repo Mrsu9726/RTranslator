@@ -17,8 +17,10 @@
 package nie.translator.rtranslator.tools;
 
 import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -39,7 +41,7 @@ public class CustomLocale implements Comparable<CustomLocale>, Serializable {
         locale = new Locale(languageCode, countryCode);
     }
 
-    public CustomLocale(String languageCode){
+    public CustomLocale(String languageCode) {
         locale = new Locale(languageCode);
     }
 
@@ -157,7 +159,7 @@ public class CustomLocale implements Comparable<CustomLocale>, Serializable {
 
     public String getDisplayName(ArrayList<CustomLocale> ttsLanguages) {
         String name = locale.getDisplayName();
-        name = name.substring(0,1).toUpperCase(locale) + name.substring(1);  //we convert the first letter to uppercase
+        name = name.substring(0, 1).toUpperCase(locale) + name.substring(1);  //we convert the first letter to uppercase
         if (containsLanguage(ttsLanguages, CustomLocale.getInstance(locale.getLanguage()))) {
             return name;
         } else {
@@ -166,9 +168,44 @@ public class CustomLocale implements Comparable<CustomLocale>, Serializable {
     }
 
     public String getDisplayNameWithoutTTS() {
-        String name = locale.getDisplayName();
-        return name.substring(0,1).toUpperCase(locale) + name.substring(1);  //we convert the first letter to uppercase
+        String name = getCustomDisplayName(locale);
+        return name.substring(0, 1).toUpperCase(locale) + name.substring(1);  //we convert the first letter to uppercase
     }
+
+    /**
+     * 根据传入的 Locale 对象返回对应的中英文名称
+     *
+     * @param locale 传入的 Locale 对象
+     * @return 英文返回 "English"，中文返回 "中文"，其他语言返回默认显示名称
+     */
+    public static String getCustomDisplayName(Locale locale) {
+        String language = locale.getLanguage();
+        switch (language) {
+            case "zh":
+                return "中文";
+            case "en":
+                return "English";
+            case "ja":
+                return "日本語";
+            case "ko":
+                return "한국어";
+            case "ru":
+                return "Русский";
+            case "de":
+                return "Deutsch";
+            case "fr":
+                return "Français";
+            case "pt":
+                return "Português";
+            case "es":
+                return "Español";
+            case "ar":
+                return "العربية";
+            default:
+                return locale.getDisplayName();
+        }
+    }
+
 
     public String getDisplayName(Locale locale) {
         return locale.getDisplayName(locale);

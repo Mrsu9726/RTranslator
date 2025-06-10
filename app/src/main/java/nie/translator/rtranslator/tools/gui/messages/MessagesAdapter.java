@@ -167,6 +167,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mResults;
     }
 
+    public void clear() {
+        //清空内容，并刷新界面
+        mResults.clear();
+        notifyDataSetChanged();
+    }
+
     /**
      * The layout for each item in the RecicleView list
      */

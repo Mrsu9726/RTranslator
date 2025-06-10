@@ -10,8 +10,10 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.TextView
 import nie.translator.rtranslator.R
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -22,6 +24,7 @@ import java.util.Locale
 object StandbyWindow {
     private var windowManager: WindowManager? = null
     private var standbyView: View? = null
+    private var standbyBgIv: ImageView? = null
     private var clockHandler: Handler? = null
     private var clockRunnable: Runnable? = null
     private var onHiddenCallback: (() -> Unit)? = null
@@ -33,7 +36,12 @@ object StandbyWindow {
         windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val inflater = LayoutInflater.from(context)
         standbyView = inflater.inflate(R.layout.window_standby, null)
-
+        standbyBgIv = standbyView?.findViewById(R.id.standby_bg_iv)
+        if (GlobalLiveDataManager.is_night_theme.value == true) {
+            standbyBgIv?.setImageResource(R.mipmap.standby_night_bg)
+        } else {
+            standbyBgIv?.setImageResource(R.mipmap.standby_bg)
+        }
         // 点击隐藏逻辑
         standbyView?.setOnClickListener {
             hide()

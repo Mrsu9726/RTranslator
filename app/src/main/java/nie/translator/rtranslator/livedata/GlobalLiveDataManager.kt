@@ -13,4 +13,9 @@ object GlobalLiveDataManager {
      * 120 dB：摇滚音乐会、喷气式飞机起飞时的噪音，会让人感到疼痛，长时间或近距离接触会导致永久性听力损失
      */
     val sound_decibel = MutableLiveData<Double>()
+
+    //是否是夜色主题
+    val is_night_theme = MutableLiveData<Boolean>(false)
+
+    val show_standby = MutableLiveData<Boolean>(false)
 }

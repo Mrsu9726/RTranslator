@@ -35,13 +35,15 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ShellUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.ys.rkapi.MyManager;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import nie.translator.rtranslator.access.AccessActivity;
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager;
+import nie.translator.rtranslator.livedata.SPKeys;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.TTS;
 import nie.translator.rtranslator.voice_translation._conversation_mode.communication.ConversationBluetoothCommunicator;
@@ -98,7 +100,9 @@ public class Global extends Application implements DefaultLifecycleObserver {
         createNotificationChannel();
         initYSAPI();
         initLogUtils();
-
+        //初始化主题设置
+        GlobalLiveDataManager.INSTANCE.is_night_theme().postValue(
+                SPUtils.getInstance().getBoolean(SPKeys.THEME_NIGHT,true));
     }
 
     /**

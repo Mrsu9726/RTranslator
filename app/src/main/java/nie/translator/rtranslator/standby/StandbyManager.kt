@@ -6,6 +6,7 @@ import android.os.Looper
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import nie.translator.rtranslator.Global
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager
 
 // StandbyManager.kt
 object StandbyManager {
@@ -44,6 +45,7 @@ object StandbyManager {
         }
         if (!isStandbyVisible) {
             isStandbyVisible = true
+            GlobalLiveDataManager.show_standby.postValue(true)
             StandbyWindow.show(context) {
                 resetTimer(context) // 隐藏后自动开始计时
             }
@@ -54,6 +56,7 @@ object StandbyManager {
         if (isStandbyVisible) {
             LogUtils.d("StandbyManager", "hideStandby")
             isStandbyVisible = false
+            GlobalLiveDataManager.show_standby.postValue(false)
             StandbyWindow.hide()
             resetTimer(context) // <- 添加此行实现隐藏后自动开始倒计时
         }
