@@ -116,6 +116,8 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
 
     private ShapeLinearLayout autoMicLayout, manuMicLayout;
 
+    private ImageView logoSyntalkIv;
+
     public WalkieTalkieFragment() {
         // Required empty public constructor
     }
@@ -158,6 +160,7 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
         bgImageView = view.findViewById(R.id.bgImageView);
         autoMicLayout = view.findViewById(R.id.mic_model_auto_layout);
         manuMicLayout = view.findViewById(R.id.mic_model_manu_layout);
+        logoSyntalkIv = view.findViewById(R.id.logo_syntalk);
         description.setText(R.string.description_walkie_talkie);
         description.setVisibility(View.GONE);
         deactivateInputs(DeactivableButton.DEACTIVATED);
@@ -296,6 +299,12 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                 return false;
             }
         });
+        logoSyntalkIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StandbyManager.INSTANCE.showStandby(requireContext());
+            }
+        });
         leftMicrophone.setOnClickListenerForDeactivatedForMissingMicPermission(micMissingClickListener);
         leftMicrophone.setOnClickListenerForDeactivated(deactivatedClickListener);
 
@@ -394,7 +403,7 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                 }
             }
         });
-        blurImage();
+//        blurImage();
     }
 
     Bitmap bitmap;

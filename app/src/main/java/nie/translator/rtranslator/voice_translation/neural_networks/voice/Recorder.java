@@ -418,7 +418,7 @@ public class Recorder {
 
     private boolean isHearingVoice(float[] buffer, int begin, int end) {
         if (!isManualMode) {
-            if (currentDecibel > 50) {
+            if (currentDecibel > 70) {
                 return true;
             }
             // We iterate circularly the mBuffer from the begin index to the end index, and if one of the values exceed the threshold the method returns true.
@@ -432,7 +432,7 @@ public class Recorder {
                 if (s > amplitudeThreshold) {
                     numberOfThreshold--;
                     // 提前退出循环
-                    if (numberOfThreshold <= 10) {
+                    if (numberOfThreshold <= 5) {
                         return true;
                     }
                 }
@@ -442,7 +442,7 @@ public class Recorder {
                     count = 0;
                 }
             }
-            if (numberOfThreshold <= 10) {
+            if (numberOfThreshold <= 5) {
                 return true;
             } else {
                 return false;

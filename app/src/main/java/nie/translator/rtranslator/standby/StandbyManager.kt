@@ -36,7 +36,7 @@ object StandbyManager {
         handler?.postDelayed(standbyRunnable!!, STANDBY_DELAY_MS)
     }
 
-    private fun showStandby(context: Context) {
+    fun showStandby(context: Context) {
         //检测应用是否在前台
         if (!AppUtils.isAppForeground()) {
             LogUtils.d("StandbyManager", "App is in background, not showing standby")

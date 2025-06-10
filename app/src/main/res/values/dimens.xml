@@ -37,6 +37,7 @@
     <dimen name="mic_width">90dp</dimen>
     <dimen name="language_select_arrow_margin">20dp</dimen>
     <dimen name="mic_line_margin">15dp</dimen>
+    <dimen name="talk_title_height">172dp</dimen>
 
 </resources>
 

@@ -27,9 +27,10 @@
     <ImageView
         android:id="@+id/bgImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/talk_title_height"
         android:scaleType="centerCrop"
-        android:src="@mipmap/standby_night_bg" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@mipmap/standby_night_blur_title" />
 
     <!--toolbar  区域-->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -136,8 +137,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="172dp"
-        android:layout_marginBottom="172dp"
+        android:layout_marginTop="@dimen/talk_title_height"
+        android:layout_marginBottom="@dimen/talk_title_height"
         android:background="@color/walkie_bg_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -195,8 +196,8 @@
         android:id="@+id/walkie_talkie_main_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="172dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginBottom="@dimen/talk_title_height"
+        android:layout_marginTop="@dimen/talk_title_height"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -216,6 +217,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!--logo-->
     <ImageView
+        android:id="@+id/logo_syntalk"
         android:layout_width="256dp"
         android:layout_height="72dp"
         android:layout_marginStart="50dp"
