@@ -17,6 +17,7 @@
 package nie.translator.rtranslator.voice_translation;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -33,6 +34,7 @@ import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.CallSuper;
@@ -67,10 +69,13 @@ import nie.translator.rtranslator.GeneralActivity;
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
 import nie.translator.rtranslator.bluetooth.BluetoothCommunicator;
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager;
 import nie.translator.rtranslator.settings.SettingsActivity;
 import nie.translator.rtranslator.standby.StandbyManager;
 import nie.translator.rtranslator.tools.CustomLocale;
 import nie.translator.rtranslator.tools.CustomServiceConnection;
+import nie.translator.rtranslator.tools.RadarPacketParser;
+import nie.translator.rtranslator.tools.RadarTargetData;
 import nie.translator.rtranslator.tools.ThreadUtils;
 import nie.translator.rtranslator.tools.Tools;
 import nie.translator.rtranslator.tools.gui.peers.GuiPeer;
@@ -114,8 +119,10 @@ public class VoiceTranslationActivity extends GeneralActivity {
     //variables
     private int connectionId = 1;
     Configuration config;
+    private TextView radar01, radar02, radar03, radar04, radar05, radar06;
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,8 +219,13 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 LogUtils.e("apk 取消");
             }
         });
-
-
+        radar01 = findViewById(R.id.radar01);
+        radar02 = findViewById(R.id.radar02);
+        radar03 = findViewById(R.id.radar03);
+        radar04 = findViewById(R.id.radar04);
+        radar05 = findViewById(R.id.radar05);
+        radar06 = findViewById(R.id.radar06);
+        startSerialPort();
     }
 
     /**
@@ -221,13 +233,28 @@ public class VoiceTranslationActivity extends GeneralActivity {
      * 但是波特率256000，RK的芯片好像不支持
      */
     private void startSerialPort() {
-        YSerialPort ySerialPort = new YSerialPort(this, "/dev/ttyS4", "256000");
+        YSerialPort ySerialPort = new YSerialPort(this, "/dev/ttyS4", "115200");
         //设置数据监听
         ySerialPort.addDataListener(new DataListener() {
             @Override
             public void value(String hexString, byte[] bytes) {
                 //结果回调:haxString , bytes
-                LogUtils.d("串口输出 ySerialPort：", hexString);
+                RadarTargetData parseUtil = RadarPacketParser.INSTANCE.parse(bytes);
+                if (parseUtil == null) {
+                    return;
+                }
+                if (parseUtil.getMovingDistanceCm() < 100) {
+                    GlobalLiveDataManager.INSTANCE.getHas_pepole().postValue(true);
+                }else {
+                    GlobalLiveDataManager.INSTANCE.getHas_pepole().postValue(false);
+                }
+                LogUtils.d("串口输出 ySerialPort：", parseUtil.toString());
+                radar01.setText("目标状态标志：" + parseUtil.getTargetStatus());
+                radar02.setText("运动目标距离：" + parseUtil.getMovingDistanceCm());
+                radar03.setText("运动目标能量值：" + parseUtil.getMovingEnergy());
+                radar04.setText("静止目标距离：" + parseUtil.getStaticDistanceCm());
+                radar05.setText("静止目标能量值：" + parseUtil.getStaticEnergy());
+                radar06.setText("雷达探测距离门范围的最大值：" + parseUtil.getDetectDistanceCm());
             }
         });
         ySerialPort.start();

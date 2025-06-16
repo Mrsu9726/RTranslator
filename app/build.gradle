@@ -97,9 +97,13 @@ android {
     applicationVariants.all { variant ->
         // apk 输出文件名配置
         variant.outputs.all { output ->
+            // 获取当前日期，格式为 yyyyMMdd
+            def currentDate = new Date().format('yyyyMMdd')
             outputFileName = "syntalk_"
             outputFileName += variant.versionName
             outputFileName += '_' + variant.buildType.name
+            // 添加打包日期到文件名
+            outputFileName += '_' + currentDate
             outputFileName += '.apk'
         }
     }

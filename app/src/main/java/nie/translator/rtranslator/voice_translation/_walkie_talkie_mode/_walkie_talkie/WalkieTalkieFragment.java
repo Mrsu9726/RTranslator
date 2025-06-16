@@ -118,6 +118,9 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
 
     private ImageView logoSyntalkIv;
 
+    private Runnable hideStandbyRunnable;
+    private static final long DELAY_TIME = 5000; // 5 秒延迟
+
     public WalkieTalkieFragment() {
         // Required empty public constructor
     }
@@ -302,6 +305,7 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
         logoSyntalkIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                GlobalLiveDataManager.INSTANCE.getClick_to_standby_time().postValue(System.currentTimeMillis());
                 StandbyManager.INSTANCE.showStandby(requireContext());
             }
         });
@@ -357,11 +361,28 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
             }
         });
 
-        GlobalLiveDataManager.INSTANCE.getSound_decibel().observe(getViewLifecycleOwner(), new Observer<Double>() {
+        GlobalLiveDataManager.INSTANCE.getHas_pepole().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
-            public void onChanged(Double aDouble) {
-                LogUtils.d("WalkieTalkieFragment", "当前分贝  sound decibel: " + aDouble);
-                StandbyManager.INSTANCE.hideOrReset(requireContext());
+            public void onChanged(Boolean hasPepole) {
+                if (hasPepole) {
+                    if (System.currentTimeMillis() - GlobalLiveDataManager.INSTANCE.getClick_to_standby_time().getValue() > 10000) {
+                        // 如果有人，移除延迟任务并隐藏或重置待机状态
+                        mHandler.removeCallbacks(hideStandbyRunnable);
+                        StandbyManager.INSTANCE.hideOrReset(requireContext());
+                    }
+                } else {
+                    // 如果没人，启动延迟任务
+                    if (hideStandbyRunnable == null) {
+                        hideStandbyRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                // 5 秒后更新 LiveData
+                                GlobalLiveDataManager.INSTANCE.getHas_pepole().postValue(false);
+                            }
+                        };
+                    }
+                    mHandler.postDelayed(hideStandbyRunnable, DELAY_TIME);
+                }
             }
         });
         GlobalLiveDataManager.INSTANCE.getShow_standby().observe(getViewLifecycleOwner(), new Observer<Boolean>() {

@@ -30,6 +30,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.util.Arrays;
 
 import nie.translator.rtranslator.Global;
@@ -416,9 +418,11 @@ public class Recorder {
         return false;
     }
 
+    private final int number_Threshold = 10;
+
     private boolean isHearingVoice(float[] buffer, int begin, int end) {
         if (!isManualMode) {
-            if (currentDecibel > 70) {
+            if (currentDecibel > 40) {
                 return true;
             }
             // We iterate circularly the mBuffer from the begin index to the end index, and if one of the values exceed the threshold the method returns true.
@@ -432,7 +436,7 @@ public class Recorder {
                 if (s > amplitudeThreshold) {
                     numberOfThreshold--;
                     // 提前退出循环
-                    if (numberOfThreshold <= 5) {
+                    if (numberOfThreshold <= number_Threshold) {
                         return true;
                     }
                 }
@@ -442,7 +446,7 @@ public class Recorder {
                     count = 0;
                 }
             }
-            if (numberOfThreshold <= 5) {
+            if (numberOfThreshold <= number_Threshold) {
                 return true;
             } else {
                 return false;
