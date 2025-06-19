@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager;
 import nie.translator.rtranslator.standby.StandbyManager;
 import opencc.OpenCC;
 
@@ -125,8 +126,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getItemCount() == 0) {
             callback.onFirstItemAdded();
         }
-        mResults.add(message);
-        notifyItemInserted(getItemCount() - 1);
+        if (Boolean.TRUE.equals(GlobalLiveDataManager.INSTANCE.getShow_message_from_top().getValue())){
+            mResults.add(0,message);
+            notifyItemInserted(0);
+        }else {
+            mResults.add(message);
+            notifyItemInserted(mResults.size()-1);
+        }
     }
 
     public void setMessage(int index, GuiMessage message) {

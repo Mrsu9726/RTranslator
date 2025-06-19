@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.google.android.material.slider.Slider;
 
 import java.util.Locale;
@@ -181,12 +182,15 @@ public class SeekBarPreference extends Preference {
             // saving the value of the textView value
             switch (mode) {
                 case MIC_SENSIBILITY_MODE:
+                    LogUtils.d("setMicSensitivity: " + value.getText().toString() + "");
                     global.setMicSensitivity(Integer.parseInt(value.getText().toString()));
                     break;
                 case SPEECH_TIMEOUT_MODE:
+                    LogUtils.d("setSpeechTimeout: " + (int) (Float.parseFloat(value.getText().toString().replace(" s", "")) * 1000) + "");
                     global.setSpeechTimeout((int) (Float.parseFloat(value.getText().toString().replace(" s", "")) * 1000));
                     break;
                 case PREV_VOICE_DURATION_MODE:
+                    LogUtils.d("setPrevVoiceDuration: " + (int) (Float.parseFloat(value.getText().toString().replace(" s", "")) * 1000) + "");
                     global.setPrevVoiceDuration((int) (Float.parseFloat(value.getText().toString().replace(" s", "")) * 1000));
                     break;
             }

@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,8 +40,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.LogUtils;
 
 import java.util.ArrayList;
+
 import nie.translator.rtranslator.Global;
 import nie.translator.rtranslator.R;
+import nie.translator.rtranslator.livedata.GlobalLiveDataManager;
 import nie.translator.rtranslator.tools.ErrorCodes;
 import nie.translator.rtranslator.tools.gui.ButtonKeyboard;
 import nie.translator.rtranslator.tools.gui.ButtonMic;
@@ -79,9 +82,11 @@ public abstract class VoiceTranslationFragment extends Fragment implements Micro
         activity = (VoiceTranslationActivity) requireActivity();
         global = (Global) activity.getApplication();
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
-        layoutManager.setStackFromEnd(true);
+        if (Boolean.FALSE.equals(GlobalLiveDataManager.INSTANCE.getShow_message_from_top().getValue())) {
+            layoutManager.setStackFromEnd(true);
+        }
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator(){
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator() {
             @Override
             public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder, int fromX, int fromY, int toX, int toY) {
                 dispatchChangeFinished(oldHolder, true);

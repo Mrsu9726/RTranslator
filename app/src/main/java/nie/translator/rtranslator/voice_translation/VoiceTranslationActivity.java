@@ -248,7 +248,6 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 }else {
                     GlobalLiveDataManager.INSTANCE.getHas_pepole().postValue(false);
                 }
-                LogUtils.d("串口输出 ySerialPort：", parseUtil.toString());
                 radar01.setText("目标状态标志：" + parseUtil.getTargetStatus());
                 radar02.setText("运动目标距离：" + parseUtil.getMovingDistanceCm());
                 radar03.setText("运动目标能量值：" + parseUtil.getMovingEnergy());

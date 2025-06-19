@@ -21,6 +21,8 @@ object GlobalLiveDataManager {
     val show_standby = MutableLiveData<Boolean>(false)
     //自动模式，手动模式
     val  manual_model = MutableLiveData<Boolean>(false)
-
+    //点击进入待机的时间
     val click_to_standby_time = MutableLiveData<Long>(0)
+    //从顶部开始显示对话，
+    val show_message_from_top = MutableLiveData<Boolean>(true)
 }

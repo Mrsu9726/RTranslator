@@ -31,6 +31,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -116,9 +118,10 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
 
     private ShapeLinearLayout autoMicLayout, manuMicLayout;
 
-    private ImageView logoSyntalkIv;
-
+    private ImageView logoSyntalkIv, gptVoiceIv;
+    private Animation scaleAnimation;
     private Runnable hideStandbyRunnable;
+    private Runnable hideGptVoiceRunnable;
     private static final long DELAY_TIME = 5000; // 5 秒延迟
 
     public WalkieTalkieFragment() {
@@ -164,9 +167,18 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
         autoMicLayout = view.findViewById(R.id.mic_model_auto_layout);
         manuMicLayout = view.findViewById(R.id.mic_model_manu_layout);
         logoSyntalkIv = view.findViewById(R.id.logo_syntalk);
+        gptVoiceIv = view.findViewById(R.id.gpt_voice);
+        scaleAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_animation);
         description.setText(R.string.description_walkie_talkie);
         description.setVisibility(View.GONE);
         deactivateInputs(DeactivableButton.DEACTIVATED);
+        hideGptVoiceRunnable = new Runnable() {
+            @Override
+            public void run() {
+                gptVoiceIv.setVisibility(View.GONE);
+                gptVoiceIv.clearAnimation();
+            }
+        };
         //container.setVisibility(View.INVISIBLE);  //we make the UI invisible until the restore of the attributes from the service (to avoid instant changes of the UI).
     }
 
@@ -864,14 +876,21 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                 rightMicrophone.onVoiceStarted(true);
                 Log.e("onVoiceStart", "onVoiceStart right");
             }
+            // 显示视图并开始动画
+            gptVoiceIv.setVisibility(View.VISIBLE);
+            gptVoiceIv.startAnimation(scaleAnimation);
         }
 
         @Override
         public void onVoiceEnded() {
             super.onVoiceEnded();
+            LogUtils.i("onVoiceEnded", "onVoiceEnded");
             microphone.onVoiceEnded(true);
             leftMicrophone.onVoiceEnded(true);
             rightMicrophone.onVoiceEnded(true);
+            // 停止动画并隐藏视图
+            gptVoiceIv.clearAnimation();
+            gptVoiceIv.setVisibility(View.GONE);
         }
 
         @Override
@@ -884,6 +903,8 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
             } else if (rightMicrophone.isListening()) {
                 rightMicrophone.updateVolumeLevel(volumeLevel);
             }
+            mHandler.removeCallbacks(hideGptVoiceRunnable);
+            mHandler.postDelayed(hideGptVoiceRunnable, 3000);
         }
 
         @Override
@@ -936,8 +957,13 @@ public class WalkieTalkieFragment extends VoiceTranslationFragment {
                     }
                     mAdapter.addMessage(message);
                     //we do an eventual automatic scroll (only if we are at the bottom of the recyclerview)
-                    if (((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition() == mAdapter.getItemCount() - 2) {
-                        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+
+                    if (Boolean.TRUE.equals(GlobalLiveDataManager.INSTANCE.getShow_message_from_top().getValue())) {
+                        mRecyclerView.smoothScrollToPosition(0);
+                    } else {
+                        if (((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition() == mAdapter.getItemCount() - 2) {
+                            mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                        }
                     }
                 }
             }

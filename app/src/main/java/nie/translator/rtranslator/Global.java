@@ -102,7 +102,7 @@ public class Global extends Application implements DefaultLifecycleObserver {
         initLogUtils();
         //初始化主题设置
         GlobalLiveDataManager.INSTANCE.is_night_theme().postValue(
-                SPUtils.getInstance().getBoolean(SPKeys.THEME_NIGHT,true));
+                SPUtils.getInstance().getBoolean(SPKeys.THEME_NIGHT, true));
     }
 
     /**

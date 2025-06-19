@@ -422,9 +422,17 @@ public class Recorder {
 
     private boolean isHearingVoice(float[] buffer, int begin, int end) {
         if (!isManualMode) {
-            if (currentDecibel > 40) {
-                return true;
+            //正在显示待机屏保时，不进行录音
+            if (Boolean.TRUE.equals(GlobalLiveDataManager.INSTANCE.getShow_standby().getValue())) {
+                return false;
             }
+            //前面没有人时，直接返回false，不进行录音
+            if (Boolean.FALSE.equals(GlobalLiveDataManager.INSTANCE.getHas_pepole().getValue())) {
+                return false;
+            }
+//            if (currentDecibel > 40) {
+//                return true;
+//            }
             // We iterate circularly the mBuffer from the begin index to the end index, and if one of the values exceed the threshold the method returns true.
             // Also The range with the old ENCODING_PCM_16BIT was [-32768, 32767], while now with the new ENCODING_PCM_FLOAT it is [-1, 1],
             // so to convert the values of the new range into those of the old range (the threshold is based on the old values) I have to multiply them by 32767.
@@ -435,10 +443,6 @@ public class Recorder {
                 int amplitudeThreshold = global.getAmplitudeThreshold();
                 if (s > amplitudeThreshold) {
                     numberOfThreshold--;
-                    // 提前退出循环
-                    if (numberOfThreshold <= number_Threshold) {
-                        return true;
-                    }
                 }
                 if (count < buffer.length - 1) {
                     count++;
@@ -447,7 +451,11 @@ public class Recorder {
                 }
             }
             if (numberOfThreshold <= number_Threshold) {
-                return true;
+                if (currentDecibel > 50) {
+                    return true;
+                }else {
+                    return false;
+                }
             } else {
                 return false;
             }
