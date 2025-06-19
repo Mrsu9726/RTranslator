@@ -153,6 +153,12 @@ Here are the results of my optimizations:
 |Execution time for 11s audio| 1.9s  | 1.6s &nbsp;&nbsp;(1.2x improvement)|
 
 **N.B.** RTranslator Whisper model can also consume 0.5 GB of RAM but with an execution time of 2.1s (this mode is used for phones with less than 8 GB of RAM)
+### FireRedASR Integration
+An optional FireRedASR backend is included under `fireredasr/`.
+Set `USE_FIRERED_ASR` in `Recognizer.java` to `true` to enable it.
+Place the FireRedASR model files in `fireredasr_model` inside the app files directory.
+See `fireredasr/README.md` for details.
+
 <br /><br />
 
 <h3>Donations</h3>
