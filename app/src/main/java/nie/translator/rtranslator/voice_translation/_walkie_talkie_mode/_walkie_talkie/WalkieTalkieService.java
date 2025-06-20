@@ -232,10 +232,7 @@ public class WalkieTalkieService extends VoiceTranslationService {
                     speechRecognizer.recognize(data, SPEECH_BEAM_SIZE, firstLanguage.getCode(), secondLanguage.getCode());
 
                 }else if(isMicAutomatic) {
-                    //we stop speech recognition
-                    stopVoiceRecorder();
-                    notifyMicDeactivated();   // we notify the client
-                    // we start the speech recognition in both languages
+                    // we start the speech recognition in both languages without stopping the mic
                     speechRecognizer.recognize(data, SPEECH_BEAM_SIZE, firstLanguage.getCode(), secondLanguage.getCode());
                 }
             }

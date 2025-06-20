@@ -215,11 +215,11 @@ public abstract class VoiceTranslationService extends GeneralService {
     public void startVoiceRecorder() {
         if (!Tools.hasPermissions(this, REQUIRED_PERMISSIONS)) {
             notifyError(new int[]{MISSING_MIC_PERMISSION}, -1);
-        } else if(isMicAutomatic){
-            if(mVoiceRecorder == null){
+        } else if (isMicAutomatic) {
+            if (mVoiceRecorder == null) {
                 initializeVoiceRecorder();
             }
-            if (mVoiceRecorder != null && !isMicMute) {
+            if (mVoiceRecorder != null && !isMicMute && !mVoiceRecorder.isRecording()) {
                 mVoiceRecorder.start();
             }
         }
