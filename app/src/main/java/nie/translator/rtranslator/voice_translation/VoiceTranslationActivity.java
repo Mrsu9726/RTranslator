@@ -255,7 +255,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 radar03.setText("运动目标能量值：" + parseUtil.getMovingEnergy());
                 radar04.setText("静止目标距离：" + parseUtil.getStaticDistanceCm());
                 radar05.setText("静止目标能量值：" + parseUtil.getStaticEnergy());
-                radar06.setText("雷达探测距离门范围的最大值：" + parseUtil.getDetectDistanceCm());
+                radar06.setText("雷达探测距离：" + parseUtil.getDetectDistanceCm());
             }
         });
         ySerialPort.start();
