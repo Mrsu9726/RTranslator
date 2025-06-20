@@ -197,7 +197,11 @@ public class Recognizer extends NeuralNetworkApi {
                     initSessionOptions.registerCustomOpLibrary(OrtxPackage.getLibraryPath());
                     initSessionOptions.setCPUArenaAllocator(false);
                     initSessionOptions.setMemoryPatternOptimization(false);
-                    initSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.NO_OPT);
+                    initSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.BASIC_OPT);
+                    int cores = Runtime.getRuntime().availableProcessors();
+                    initSessionOptions.setInterOpNumThreads(cores);
+                    initSessionOptions.setIntraOpNumThreads(cores);
+                    initSessionOptions.setExecutionMode(OrtSession.SessionOptions.ExecutionMode.PARALLEL);
                     initSession = onnxEnv.createSession(modelInitPath, initSessionOptions);
 
                     OrtSession.SessionOptions encoderSessionOptions = new OrtSession.SessionOptions();
@@ -210,14 +214,18 @@ public class Recognizer extends NeuralNetworkApi {
                         encoderSessionOptions.setMemoryPatternOptimization(true);
                     }
                     encoderSessionOptions.setSymbolicDimensionValue("batch_size", 1);
-                    encoderSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.NO_OPT);
+                    encoderSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.BASIC_OPT);
+                    encoderSessionOptions.setInterOpNumThreads(cores);
+                    encoderSessionOptions.setIntraOpNumThreads(cores);
                     encoderSession = onnxEnv.createSession(encoderPath, encoderSessionOptions);
 
                     OrtSession.SessionOptions cacheSessionOptions = new OrtSession.SessionOptions();
                     cacheSessionOptions.registerCustomOpLibrary(OrtxPackage.getLibraryPath());
                     cacheSessionOptions.setCPUArenaAllocator(false);
                     cacheSessionOptions.setMemoryPatternOptimization(false);
-                    cacheSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.NO_OPT);
+                    cacheSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.BASIC_OPT);
+                    cacheSessionOptions.setInterOpNumThreads(cores);
+                    cacheSessionOptions.setIntraOpNumThreads(cores);
                     cacheInitSession = onnxEnv.createSession(cacheInitPath, cacheSessionOptions);
                     cacheInitBatchSession = onnxEnv.createSession(cacheInitBatchPath, cacheSessionOptions);
 
@@ -225,13 +233,18 @@ public class Recognizer extends NeuralNetworkApi {
                     decoderSessionOptions.registerCustomOpLibrary(OrtxPackage.getLibraryPath());
                     decoderSessionOptions.setCPUArenaAllocator(false);
                     decoderSessionOptions.setMemoryPatternOptimization(false);
-                    decoderSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.NO_OPT);
+                    decoderSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.BASIC_OPT);
+                    decoderSessionOptions.setInterOpNumThreads(cores);
+                    decoderSessionOptions.setIntraOpNumThreads(cores);
                     decoderSession = onnxEnv.createSession(decoderPath, decoderSessionOptions);
 
                     OrtSession.SessionOptions detokenizerSessionOptions = new OrtSession.SessionOptions();
                     detokenizerSessionOptions.registerCustomOpLibrary(OrtxPackage.getLibraryPath());
                     detokenizerSessionOptions.setCPUArenaAllocator(false);
                     detokenizerSessionOptions.setMemoryPatternOptimization(false);
+                    detokenizerSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.BASIC_OPT);
+                    detokenizerSessionOptions.setInterOpNumThreads(cores);
+                    detokenizerSessionOptions.setIntraOpNumThreads(cores);
                     //detokenizerSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.NO_OPT);
                     detokenizerSession = onnxEnv.createSession(detokenizerPath, detokenizerSessionOptions);
 
