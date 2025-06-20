@@ -63,6 +63,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private SupportTtsQualityPreference supportTtsQualityPreference;
     private LanguagePreference languagePreference;
 
+    private ShowLandaPreference showLandaPreference;
+
     private Handler selfHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
@@ -146,6 +148,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // user name initialization
         userNamePreference = (UserNamePreference) findPreference("changeName");
         userNamePreference.setActivity(activity);
+        showLandaPreference = findPreference("showLandscape");
+        showLandaPreference.setActivity(activity);
         /*userNamePreference.getEditTextHeight(new UserNamePreference.DateCallback() {
             @Override
             public void onViewHeightMeasured(int height) {

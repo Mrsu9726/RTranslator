@@ -154,8 +154,8 @@ public class LoadingActivity extends GeneralActivity {
      */
     private void initConfig() {
         global.setMicSensitivity(90);//麦克风灵敏度
-        global.setSpeechTimeout(1900);//语音超时结束时间
-        global.setPrevVoiceDuration(1800);//语音预期持续时间
+        global.setSpeechTimeout(530);//语音超时结束时间
+        global.setPrevVoiceDuration(1300);//语音预期持续时间
     }
 
     @Override

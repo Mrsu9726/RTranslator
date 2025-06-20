@@ -3,6 +3,8 @@ package nie.translator.rtranslator.livedata
 import androidx.lifecycle.MutableLiveData
 
 object GlobalLiveDataManager {
+
+
     /**
      * 声音分贝范围划分
      * 0 dB：人耳能听到的最小声音，接近听觉阈值。
@@ -25,4 +27,6 @@ object GlobalLiveDataManager {
     val click_to_standby_time = MutableLiveData<Long>(0)
     //从顶部开始显示对话，
     val show_message_from_top = MutableLiveData<Boolean>(true)
+    //显示雷达调试参数
+    var showLanda = MutableLiveData<Boolean>(false)
 }

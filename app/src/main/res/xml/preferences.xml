@@ -63,7 +63,10 @@
             android:dialogTitle="Application language"
             app:iconSpaceReserved="false" />
     </androidx.preference.PreferenceCategory>
-
+    <nie.translator.rtranslator.settings.ShowLandaPreference
+        android:key="showLandscape"
+        android:layout="@layout/preference_show_landa"
+        app:iconSpaceReserved="false"/>
     <androidx.preference.PreferenceCategory
         android:title="@string/preference_header_output"
         app:iconSpaceReserved="false"

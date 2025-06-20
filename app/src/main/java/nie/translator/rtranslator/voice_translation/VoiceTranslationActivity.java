@@ -34,6 +34,7 @@ import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -120,7 +121,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
     private int connectionId = 1;
     Configuration config;
     private TextView radar01, radar02, radar03, radar04, radar05, radar06;
-
+    private LinearLayout landardLayout;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -225,6 +226,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
         radar04 = findViewById(R.id.radar04);
         radar05 = findViewById(R.id.radar05);
         radar06 = findViewById(R.id.radar06);
+        landardLayout = findViewById(R.id.landardLayout);
         startSerialPort();
     }
 
@@ -245,7 +247,7 @@ public class VoiceTranslationActivity extends GeneralActivity {
                 }
                 if (parseUtil.getMovingDistanceCm() < 100) {
                     GlobalLiveDataManager.INSTANCE.getHas_pepole().postValue(true);
-                }else {
+                } else {
                     GlobalLiveDataManager.INSTANCE.getHas_pepole().postValue(false);
                 }
                 radar01.setText("目标状态标志：" + parseUtil.getTargetStatus());
@@ -257,6 +259,9 @@ public class VoiceTranslationActivity extends GeneralActivity {
             }
         });
         ySerialPort.start();
+        if (Boolean.TRUE.equals(GlobalLiveDataManager.INSTANCE.getShowLanda().getValue()) == true) {
+            landardLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     ProgressPopupView progressPopup;
@@ -284,6 +289,14 @@ public class VoiceTranslationActivity extends GeneralActivity {
         setFragment(sharedPreferences.getInt("fragment", DEFAULT_FRAGMENT));
         if (getResources() != null) {
             config = getResources().getConfiguration();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (Boolean.TRUE.equals(GlobalLiveDataManager.INSTANCE.getShowLanda().getValue()) == true) {
+            landardLayout.setVisibility(View.VISIBLE);
         }
     }
 
