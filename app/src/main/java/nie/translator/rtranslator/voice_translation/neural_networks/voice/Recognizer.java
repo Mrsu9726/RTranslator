@@ -21,6 +21,8 @@ import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -174,6 +176,7 @@ public class Recognizer extends NeuralNetworkApi {
     private OrtSession cacheInitBatchSession;
     private OrtSession decoderSession;
     private OrtSession detokenizerSession;
+    private OnnxCorrector macBertCorrector;
     private OrtEnvironment onnxEnv;
 
 
@@ -234,6 +237,8 @@ public class Recognizer extends NeuralNetworkApi {
                     detokenizerSessionOptions.setMemoryPatternOptimization(false);
                     //detokenizerSessionOptions.setOptimizationLevel(OrtSession.SessionOptions.OptLevel.NO_OPT);
                     detokenizerSession = onnxEnv.createSession(detokenizerPath, detokenizerSessionOptions);
+
+                    macBertCorrector = new OnnxCorrector(global.getApplicationContext());
 
                     initListener.onInitializationFinished();
                 } catch (OrtException e) {
@@ -499,11 +504,12 @@ public class Recognizer extends NeuralNetworkApi {
                             finalText = ((String[][]) finalTextResult)[0][0];
                             detokenizerOutputs.close();
                         }
-                        android.util.Log.i("result", "result: " + correctText(finalText));
+                        String corrected = correctText(finalText);
+                        android.util.Log.i("result", "result: " + corrected);
                         android.util.Log.i("score", "score: " + outputProbability1);
 
                         outputs.close();
-                        notifyResult(correctText(finalText), data.languageCode, outputProbability1, true);
+                        notifyResult(corrected, data.languageCode, outputProbability1, true);
 
                     }else{
                         String firstText = UNDEFINED_TEXT;
@@ -527,12 +533,14 @@ public class Recognizer extends NeuralNetworkApi {
                             detokenizerOutputs2.close();
                         }
 
-                        android.util.Log.i("result", "result 1: " + correctText(firstText));
-                        android.util.Log.i("result", "result 2: " + correctText(secondText));
+                        String correctedFirst = correctText(firstText);
+                        String correctedSecond = correctText(secondText);
+                        android.util.Log.i("result", "result 1: " + correctedFirst);
+                        android.util.Log.i("result", "result 2: " + correctedSecond);
                         android.util.Log.i("result", "score 1: " + outputProbability1);
                         android.util.Log.i("result", "score 2: " + outputProbability2);
 
-                        notifyMultiResult(correctText(firstText), data.languageCode, outputProbability1, correctText(secondText), data.languageCode2, outputProbability2);
+                        notifyMultiResult(correctedFirst, data.languageCode, outputProbability1, correctedSecond, data.languageCode2, outputProbability2);
                     }
                     //closing all results
                     outputs.close();
@@ -556,7 +564,10 @@ public class Recognizer extends NeuralNetworkApi {
 
     private String correctText(String text){
         String correctedText = text;
-
+        if(macBertCorrector != null){
+            correctedText = macBertCorrector.correctSentence(text);
+        }
+        LogUtils.d("原句子：" + text+"，语法纠正：" + correctedText);
         //sometimes, even if timestamps are deactivated, Whisper insert those anyway (es. <|0.00|>), so we remove eventual timestamps
         String regex = "<\\|[^>]*\\|> ";    //with this regex we remove all substrings of the form "<|something|> "
         correctedText = correctedText.replaceAll(regex, "");

@@ -128,7 +128,7 @@ dependencies {
     //gallery image selector
     //implementation 'com.github.niedev:GalleryImageSelector:1.0.7'
     //ONNX Runtime
-    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.19.0'  //latest.release
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.22.0'  //latest.release
     implementation 'com.microsoft.onnxruntime:onnxruntime-extensions-android:0.12.4'   //latest.release
     //Ml-Kit
     implementation 'com.google.mlkit:language-id:17.0.5'
@@ -171,5 +171,4 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2' // 最新版本可查 [Google Maven]
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
-
 }

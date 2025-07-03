@@ -73,7 +73,8 @@ public class DownloadFragment extends Fragment {
             "https://github.com/niedev/RTranslator/releases/download/2.0.0/Whisper_decoder.onnx",
             "https://github.com/niedev/RTranslator/releases/download/2.0.0/Whisper_detokenizer.onnx",
             "https://github.com/niedev/RTranslator/releases/download/2.0.0/Whisper_encoder.onnx",
-            "https://github.com/niedev/RTranslator/releases/download/2.0.0/Whisper_initializer.onnx"
+            "https://github.com/niedev/RTranslator/releases/download/2.0.0/Whisper_initializer.onnx",
+            "https://github.com/niedev/RTranslator/releases/download/2.0.0/Whisper_corrector.onnx"
     };
     public static final String[] DOWNLOAD_NAMES = {
             "NLLB_cache_initializer.onnx",
@@ -85,7 +86,8 @@ public class DownloadFragment extends Fragment {
             "Whisper_decoder.onnx",
             "Whisper_detokenizer.onnx",
             "Whisper_encoder.onnx",
-            "Whisper_initializer.onnx"
+            "Whisper_initializer.onnx",
+            "Whisper_corrector.onnx"
     };
     public static final int[] DOWNLOAD_SIZES = {   //the size of the models in Kb (they are not exact, because this is used only for show the progress in progressbar)
             24000,
@@ -97,7 +99,8 @@ public class DownloadFragment extends Fragment {
             173000,
             461,
             88000,
-            69
+            69,
+            54000
     };
     private static final long INTERVAL_TIME_FOR_GUI_UPDATES_MS = 100;  //500
     private AccessActivity activity;
