@@ -106,7 +106,10 @@ configChanges serve a evitare il riavvio dell' activity quando ruota e quindi pe
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Speech" />
-
+        <activity android:name=".runpoad.RunpodActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Speech"/>
         <service
             android:name=".voice_translation._conversation_mode._conversation.ConversationService"
             android:foregroundServiceType="microphone"
