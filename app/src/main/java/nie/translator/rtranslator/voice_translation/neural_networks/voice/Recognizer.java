@@ -50,6 +50,7 @@ import nie.translator.rtranslator.tools.ErrorCodes;
 import nie.translator.rtranslator.tools.nn.TensorUtils;
 import nie.translator.rtranslator.tools.nn.Utils;
 import nie.translator.rtranslator.voice_translation.neural_networks.NeuralNetworkApi;
+import nie.translator.rtranslator.voice_translation.neural_networks.voice.FireRedAsrRecognizer;
 
 
 public class Recognizer extends NeuralNetworkApi {
@@ -61,6 +62,8 @@ public class Recognizer extends NeuralNetworkApi {
     private boolean recognizing = false;
     private ArrayDeque<DataContainer> dataToRecognize = new ArrayDeque<>();
     private final Object lock = new Object();
+    private static final boolean USE_FIRERED_ASR = false;
+    private FireRedAsrRecognizer fireRedAsr;
 
     private static final String[] LANGUAGES = {
             "en",
@@ -183,6 +186,11 @@ public class Recognizer extends NeuralNetworkApi {
     public Recognizer(Global global, final boolean returnResultOnlyAtTheEnd, final NeuralNetworkApi.InitListener initListener) {
         this.global = global;
         //onnxEnv = OrtEnvironment.getEnvironment(OrtLoggingLevel.ORT_LOGGING_LEVEL_VERBOSE);
+        if (USE_FIRERED_ASR) {
+            fireRedAsr = new FireRedAsrRecognizer(global.getApplicationContext(), "python3", global.getApplicationContext().getFilesDir().getPath() + "/fireredasr_model", "aed");
+            initListener.onInitializationFinished();
+            return;
+        }
         onnxEnv = OrtEnvironment.getEnvironment();
 
         String modelInitPath = global.getApplicationContext().getFilesDir().getPath() + "/Whisper_initializer.onnx";
@@ -256,6 +264,15 @@ public class Recognizer extends NeuralNetworkApi {
      * @param data The audio data.
      */
     public void recognize(final float[] data, int beamSize, final String languageCode) {
+        if (USE_FIRERED_ASR) {
+            try {
+                String text = fireRedAsr.recognize(data, Recorder.SAMPLE_RATE_CANDIDATES[0]);
+                notifyResult(text, languageCode, 0, true);
+            } catch (Exception e) {
+                Log.e("FireRedASR", "error", e);
+            }
+            return;
+        }
         new Thread("recognizer"){
             @Override
             public void run() {
